@@ -13,12 +13,12 @@
                 together right away. Couch co-op meet the internet age.
             </p>
             <div class="inline-flex">
-                <a
-                    href="#"
+                <Link
+                    href="/lobbies/AGXB"
                     class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white hover:bg-indigo-100 sm:w-auto"
                 >
                     Create Lobby
-                </a>
+                </Link>
             </div>
             <div class="ml-3 inline-flex">
                 <a
