@@ -1,5 +1,6 @@
 <?php
 
+use App\Events\MemberJoinedLobby;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -10,5 +11,7 @@ Route::get('/lobbies/{code}', function (string $code) {
 })->name('lobby.show');
 
 Route::post('/lobbies/{code}/members', function (string $code) {
+    MemberJoinedLobby::dispatch($code);
+
     return redirect()->route('lobby.show', ['code' => $code]);
 })->name('lobby.members.create');
