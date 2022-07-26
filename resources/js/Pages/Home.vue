@@ -21,12 +21,15 @@
                 </Link>
             </div>
             <div class="ml-3 inline-flex">
-                <a
-                    href="#"
+                <Link
+                    href="/lobbies/AGXB/members"
+                    method="post"
+                    as="button"
+                    type="button"
                     class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 sm:w-auto"
                 >
                     Join Lobby
-                </a>
+                </Link>
             </div>
         </div>
     </div>
