@@ -11,12 +11,12 @@ class MemberJoinedLobby implements ShouldBroadcast
     {
     }
 
-    public function broadcastAs()
+    public function broadcastAs(): string
     {
         return 'lobby.members.joined';
     }
 
-    public function broadcastOn()
+    public function broadcastOn(): Channel
     {
         return new Channel('lobby.'.$this->lobbyCode);
     }
