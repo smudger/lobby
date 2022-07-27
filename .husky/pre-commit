@@ -3,3 +3,5 @@
 
 yarn lint
 yarn format
+vendor/bin/deptrac --config-file=deptrac_layers.yaml
+vendor/bin/deptrac --config-file=deptrac_modules.yaml
