@@ -8,7 +8,7 @@ const props = defineProps({
 
 const timeline = reactive([]);
 
-Echo.channel(`lobby.${props.code}`).listen("MemberJoinedLobby", () => {
+Echo.channel(`lobby.${props.code}`).listen(".lobby.members.joined", () => {
     timeline.push({
         id: 1,
         content: "Member joined lobby",
