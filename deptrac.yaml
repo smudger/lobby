@@ -1,0 +1,33 @@
+deptrac:
+  paths:
+    - ./app
+  layers:
+    - name: Application
+      collectors:
+        - type: directory
+          regex: app/Application/.*
+    - name: Domain
+      collectors:
+        - type: directory
+          regex: app/Domain/.*
+    - name: Infrastructure
+      collectors:
+        - type: directory
+          regex: app/Infrastructure/.*
+    - name: Third-Party
+      collectors:
+        - type: bool
+          must_not:
+            - type: directory
+              value: app/.*
+            - type: className
+              value: .*Illuminate.*
+  ruleset:
+    Application:
+      - Domain
+      - Infrastructure
+    Domain:
+      - Infrastructure
+    Infrastructure:
+      - Third-Party
+    Third-Party: ~

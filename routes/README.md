@@ -1,3 +1,3 @@
 # Where are the routes?
 
-Route files are located within each module e.g. `App/Lobby/Infrastructure/Delivery/Routes`
+HTTP routes are configured within the application's HTTP infrastructure directory at `app/Infrastructure/Http/Routes`
