@@ -4,3 +4,4 @@
 yarn lint
 yarn format
 vendor/bin/deptrac
+vendor/bin/pint

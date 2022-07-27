@@ -1,7 +1,6 @@
 <?php
 
 use App\Domain\Events\MemberJoinedLobby;
-use Illuminate\Support\Facades\Broadcast;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;

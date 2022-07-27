@@ -8,9 +8,11 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 class MemberJoinedLobby implements ShouldBroadcast
 {
     public function __construct(private readonly string $lobbyCode)
-    {}
+    {
+    }
 
-    public function broadcastAs() {
+    public function broadcastAs()
+    {
         return 'lobby.members.joined';
     }
 
