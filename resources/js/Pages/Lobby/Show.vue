@@ -3,17 +3,17 @@ import { UserIcon } from "@heroicons/vue/solid";
 import { reactive } from "vue";
 
 const props = defineProps({
-    code: String,
+    id: String,
 });
 
 const timeline = reactive([]);
 
-Echo.channel(`lobby.${props.code}`).listen(".lobby.members.joined", () => {
+Echo.channel(`lobby.${props.id}`).listen(".lobby.members.joined", () => {
     timeline.push({
         id: 1,
         content: "Member joined lobby",
-        target: `${props.code}`,
-        href: `/lobbies/${props.code}`,
+        target: `${props.id}`,
+        href: `/lobbies/${props.id}`,
         date: "Sep 20",
         datetime: "2020-09-20",
         icon: UserIcon,
@@ -23,7 +23,7 @@ Echo.channel(`lobby.${props.code}`).listen(".lobby.members.joined", () => {
 </script>
 
 <template>
-    <Head :title="`Lobby ${code}`" />
+    <Head :title="`Lobby ${id}`" />
 
     <div
         class="flex flex-col items-center justify-center min-h-screen bg-indigo-700"
@@ -31,7 +31,7 @@ Echo.channel(`lobby.${props.code}`).listen(".lobby.members.joined", () => {
         <h2
             class="text-3xl font-mono font-extrabold text-white sm:text-4xl mb-6"
         >
-            {{ code }}
+            {{ id }}
         </h2>
 
         <div v-show="timeline.length" class="bg-white p-6 rounded-lg">

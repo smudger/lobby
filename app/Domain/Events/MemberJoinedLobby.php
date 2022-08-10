@@ -7,7 +7,7 @@ use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class MemberJoinedLobby implements ShouldBroadcast
 {
-    public function __construct(private readonly string $lobbyCode)
+    public function __construct(private readonly string $lobbyId)
     {
     }
 
@@ -18,6 +18,6 @@ class MemberJoinedLobby implements ShouldBroadcast
 
     public function broadcastOn(): Channel
     {
-        return new Channel('lobby.'.$this->lobbyCode);
+        return new Channel('lobby.'.$this->lobbyId);
     }
 }

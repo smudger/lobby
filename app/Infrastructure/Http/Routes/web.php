@@ -10,12 +10,12 @@ Route::inertia('/', 'Home');
 
 Route::post('/lobbies', [LobbyController::class, 'store']);
 
-Route::get('/lobbies/{code}', function (string $code) {
-    return Inertia::render('Lobby/Show', ['code' => $code]);
+Route::get('/lobbies/{id}', function (string $id) {
+    return Inertia::render('Lobby/Show', ['id' => $id]);
 })->name('lobby.show');
 
-Route::post('/lobbies/{code}/members', function (string $code) {
-    Event::dispatch(new MemberJoinedLobby($code));
+Route::post('/lobbies/{id}/members', function (string $id) {
+    Event::dispatch(new MemberJoinedLobby($id));
 
-    return redirect()->route('lobby.show', ['code' => $code]);
+    return redirect()->route('lobby.show', ['id' => $id]);
 })->name('lobby.members.create');
