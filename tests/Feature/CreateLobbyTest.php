@@ -5,7 +5,6 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
-use Inertia\Testing\AssertableInertia;
 use Tests\TestCase;
 
 class CreateLobbyTest extends TestCase
@@ -26,9 +25,6 @@ class CreateLobbyTest extends TestCase
         /** @var \stdClass */
         $lobby = DB::table('lobbies')->whereNotNull('allocated_at')->first();
 
-        $response->assertInertia(fn (AssertableInertia $page) => $page
-            ->component('Lobby/Show')
-            ->where('code', $lobby->id)
-        );
+        $response->assertRedirect(route('lobby.show', ['id' => $lobby->id]));
     }
 }

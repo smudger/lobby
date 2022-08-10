@@ -3,15 +3,14 @@
 namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\CreateLobbyHandler;
-use Inertia\Inertia;
-use Inertia\Response;
+use Illuminate\Http\RedirectResponse;
 
 class LobbyController extends Controller
 {
-    public function store(CreateLobbyHandler $handler): Response
+    public function store(CreateLobbyHandler $handler): RedirectResponse
     {
         $lobby = $handler->execute();
 
-        return Inertia::render('Lobby/Show', ['code' => $lobby->id->__toString()]);
+        return redirect()->route('lobby.show', ['id' => $lobby->id]);
     }
 }

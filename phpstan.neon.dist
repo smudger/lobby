@@ -1,8 +1,8 @@
 parameters:
     reportMaybesInPropertyPhpDocTypes: false
     ignoreErrors:
-        - '#^Call to an undefined method Illuminate\\Testing\\TestResponse\:\:assertInertia\(\)\.$#'
         - '#^Property App\\Domain\\Exceptions\\.*Exception\:\:\$message has no type specified\.$#'
+        - '#^Call to an undefined method Illuminate\\Http\\RedirectResponse\|Illuminate\\Routing\\Redirector\:\:route\(\)\.$#'
     level: max
     paths:
         - app
