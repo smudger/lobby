@@ -22,12 +22,16 @@ deptrac:
               value: app/.*
             - type: className
               value: .*Illuminate.*
+            - type: classLike
+              value: Exception
+            - type: classLike
+              value: Stringable
   ruleset:
     Application:
       - Domain
-      - Infrastructure
-    Domain:
-      - Infrastructure
+    Domain: ~
     Infrastructure:
+      - Application
+      - Domain
       - Third-Party
     Third-Party: ~
