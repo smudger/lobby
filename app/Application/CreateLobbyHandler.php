@@ -14,11 +14,7 @@ class CreateLobbyHandler
 
     public function execute(): Lobby
     {
-        $id = $this->repository->nextId();
-
-        $lobby = new Lobby($id);
-
-        $this->repository->save($lobby);
+        $lobby = $this->repository->allocate();
 
         return $lobby;
     }

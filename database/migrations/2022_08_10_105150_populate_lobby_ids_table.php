@@ -11,11 +11,9 @@ return new class extends Migration
         $secondLetterGroups = $this->generate2LetterIds();
 
         foreach ($firstLetterGroups as $firstLetterGroup) {
-            DB::table('lobbies')->insert(
+            DB::table('lobby_ids')->insert(
                 array_map(fn (string $secondLetterGroup) => [
                     'id' => $firstLetterGroup.$secondLetterGroup,
-                    'created_at' => now(),
-                    'updated_at' => now(),
                 ], $secondLetterGroups)
             );
         }

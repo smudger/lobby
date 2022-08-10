@@ -2,47 +2,54 @@
 
 namespace App\Infrastructure\Persistence;
 
-use App\Domain\Exceptions\IdGenerationException;
-use App\Domain\Exceptions\LobbyNotFoundException;
+use App\Domain\Exceptions\LobbyAllocationException;
+use App\Domain\Exceptions\LobbyNotAllocatedException;
+use App\Domain\Exceptions\NoMoreLobbiesException;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\LobbyId;
 use App\Domain\Repositories\LobbyRepository;
+use Illuminate\Database\Query\Builder;
+use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 
 class SqlLobbyRepository implements LobbyRepository
 {
-    public function nextId(): LobbyId
-    {
-        if (DB::table('lobbies')->whereNull('allocated_at')->doesntExist()) {
-            throw new IdGenerationException('No more lobby IDs available.');
-        }
-
-        /** @var \stdClass */
-        $lobbyObject = DB::table('lobbies')
-            ->select('id')
-            ->whereNull('allocated_at')
-            ->inRandomOrder()
-            ->first();
-
-        return LobbyId::fromString($lobbyObject->id);
-    }
-
-    public function save(Lobby $lobby): void
-    {
-        DB::table('lobbies')
-            ->where('id', $lobby->id->__toString())
-            ->update([
-                'allocated_at' => now(),
-                'updated_at' => now(),
-            ]);
-    }
-
     public function findById(LobbyId $id): Lobby
     {
-        if (DB::table('lobbies')->where('id', $id->__toString())->whereNotNull('allocated_at')->doesntExist()) {
-            throw new LobbyNotFoundException('A lobby with the given ID could not be found.');
+        if (DB::table('lobbies')->where('id', $id->__toString())->doesntExist()) {
+            throw new LobbyNotAllocatedException();
         }
 
         return new Lobby($id);
+    }
+
+    public function allocate(): Lobby
+    {
+        /** @var ?\stdClass */
+        $row = DB::table('lobby_ids')
+            ->select('id')
+            ->whereNotIn('id', fn (Builder $query) => $query
+                ->select('id')
+                ->from('lobbies')
+            )
+            ->inRandomOrder()
+            ->limit(1)
+            ->first();
+
+        if (is_null($row)) {
+            throw new NoMoreLobbiesException();
+        }
+
+        try {
+            DB::table('lobbies')
+                ->insert([
+                    'id' => $row->id,
+                    'allocated_at' => now(),
+                ]);
+        } catch (QueryException $e) {
+            throw new LobbyAllocationException(previous: $e);
+        }
+
+        return new Lobby(LobbyId::fromString($row->id));
     }
 }

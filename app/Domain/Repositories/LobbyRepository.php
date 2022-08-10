@@ -2,22 +2,22 @@
 
 namespace App\Domain\Repositories;
 
-use App\Domain\Exceptions\IdGenerationException;
-use App\Domain\Exceptions\LobbyNotFoundException;
+use App\Domain\Exceptions\LobbyAllocationException;
+use App\Domain\Exceptions\LobbyNotAllocatedException;
+use App\Domain\Exceptions\NoMoreLobbiesException;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\LobbyId;
 
 interface LobbyRepository
 {
     /**
-     *  @throws IdGenerationException
+     * @throws NoMoreLobbiesException
+     * @throws LobbyAllocationException
      */
-    public function nextId(): LobbyId;
-
-    public function save(Lobby $lobby): void;
+    public function allocate(): Lobby;
 
     /**
-     * @throws LobbyNotFoundException
+     * @throws LobbyNotAllocatedException
      */
     public function findById(LobbyId $id): Lobby;
 }

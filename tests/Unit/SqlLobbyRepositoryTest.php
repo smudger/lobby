@@ -2,7 +2,7 @@
 
 namespace Tests\Unit;
 
-use App\Domain\Exceptions\IdGenerationException;
+use App\Domain\Exceptions\NoMoreLobbiesException;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Persistence\SqlLobbyRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -20,16 +20,28 @@ class SqlLobbyRepositoryTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_an_exception_if_there_are_no_more_ids_available(): void
+    public function it_throws_an_exception_if_there_are_no_more_lobbies_available(): void
     {
-        DB::table('lobbies')->update(['allocated_at' => now()]);
+        $firstLetterGroups = $this->generateAllIdsOfLength(2);
+        $secondLetterGroups = $this->generateAllIdsOfLength(2);
+
+        foreach ($firstLetterGroups as $firstLetterGroup) {
+            $rows = collect($secondLetterGroups)
+                ->map(fn (string $secondLetterGroup) => [
+                    'id' => $firstLetterGroup.$secondLetterGroup,
+                    'allocated_at' => now(),
+                ])
+                ->toArray();
+
+            DB::table('lobbies')->insert($rows);
+        }
 
         try {
-            $this->getRepository()->nextId();
+            $this->getRepository()->allocate();
 
-            Assert::fail('No exception thrown despite generation failure.');
-        } catch (IdGenerationException $e) {
-            Assert::assertEquals('No more lobby IDs available.', $e->getMessage());
+            Assert::fail('No exception thrown despite no more lobbies available.');
+        } catch (NoMoreLobbiesException $e) {
+            Assert::assertEquals('There are currently no lobbies available for allocation.', $e->getMessage());
         }
     }
 }

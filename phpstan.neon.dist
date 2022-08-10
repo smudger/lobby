@@ -2,6 +2,7 @@ parameters:
     reportMaybesInPropertyPhpDocTypes: false
     ignoreErrors:
         - '#^Call to an undefined method Illuminate\\Testing\\TestResponse\:\:assertInertia\(\)\.$#'
+        - '#^Property App\\Domain\\Exceptions\\.*Exception\:\:\$message has no type specified\.$#'
     level: max
     paths:
         - app

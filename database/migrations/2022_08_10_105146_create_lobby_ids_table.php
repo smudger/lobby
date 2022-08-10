@@ -8,11 +8,8 @@ return new class extends Migration
 {
     public function up()
     {
-        Schema::create('lobbies', function (Blueprint $table) {
+        Schema::create('lobby_ids', function (Blueprint $table) {
             $table->string('id')->primary()->unique();
-            $table->timestamp('allocated_at');
-
-            $table->foreign('id')->references('id')->on('lobby_ids');
         });
     }
 };
