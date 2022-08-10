@@ -2,10 +2,8 @@
 
 namespace Tests\Unit;
 
-use App\Domain\Exceptions\IdGenerationException;
 use App\Domain\Exceptions\LobbyNotFoundException;
 use App\Domain\Models\Lobby;
-use App\Domain\Models\LobbyId;
 use App\Domain\Repositories\LobbyRepository;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;

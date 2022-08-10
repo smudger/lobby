@@ -3,8 +3,6 @@
 namespace Tests\Unit;
 
 use App\Application\CreateLobbyHandler;
-use App\Domain\Models\Lobby;
-use App\Domain\Models\LobbyId;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;

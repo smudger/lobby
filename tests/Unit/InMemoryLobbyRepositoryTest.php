@@ -29,14 +29,13 @@ class InMemoryLobbyRepositoryTest extends LobbyRepositoryTest
     }
 
     /**
-     * @param string[] $combinations
+     * @param  string[]  $combinations
      * @return string[]
      */
     public function generateAllIds(
         int $length = 4,
         array $combinations = [],
-    ): array
-    {
+    ): array {
         $chars = range('A', 'Z');
 
         /**
