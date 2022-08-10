@@ -31,12 +31,12 @@ class InMemoryLobbyRepository implements LobbyRepository
         }
 
         do {
-            $id = strtoupper($this->faker->lexify('????'));
-        } while (in_array($id, $this->assignedIds, true));
+            $rawId = strtoupper($this->faker->lexify('????'));
+        } while (in_array($rawId, $this->assignedIds, true));
 
-        $this->assignedIds[] = $id;
+        $this->assignedIds[] = $rawId;
 
-        return new LobbyId($id);
+        return LobbyId::fromString($rawId);
     }
 
     public function save(Lobby $lobby): void

@@ -6,9 +6,12 @@ use App\Domain\Exceptions\IdGenerationException;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use PHPUnit\Framework\Assert;
+use PHPUnit\Framework\TestCase;
 
-class InMemoryLobbyRepositoryTest extends LobbyRepositoryTest
+class InMemoryLobbyRepositoryTest extends TestCase
 {
+    use LobbyRepositoryTest;
+
     protected function getRepository(): LobbyRepository
     {
         return new InMemoryLobbyRepository();

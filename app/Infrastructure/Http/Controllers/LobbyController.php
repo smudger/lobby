@@ -2,13 +2,16 @@
 
 namespace App\Infrastructure\Http\Controllers;
 
-use Illuminate\Contracts\Routing\ResponseFactory;
-use Illuminate\Http\Response;
+use App\Application\CreateLobbyHandler;
+use Inertia\Inertia;
+use Inertia\Response;
 
 class LobbyController extends Controller
 {
-    public function store(): Response|ResponseFactory
+    public function store(CreateLobbyHandler $handler): Response
     {
-        return response(status: 201);
+        $lobby = $handler->execute();
+
+        return Inertia::render('Lobby/Show', ['code' => $lobby->id->__toString()]);
     }
 }

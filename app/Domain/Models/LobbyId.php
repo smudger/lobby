@@ -11,6 +11,11 @@ class LobbyId implements Stringable
     ) {
     }
 
+    public static function fromString(string $raw): self
+    {
+        return new self($raw);
+    }
+
     public function equals(mixed $other): bool
     {
         if (! ($other instanceof self)) {

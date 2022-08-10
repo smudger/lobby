@@ -1,5 +1,7 @@
 parameters:
     reportMaybesInPropertyPhpDocTypes: false
+    ignoreErrors:
+        - '#^Call to an undefined method Illuminate\\Testing\\TestResponse\:\:assertInertia\(\)\.$#'
     level: max
     paths:
         - app
