@@ -12,7 +12,7 @@ class CreateLobbyTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function it_creates_a_lobby(): void
+    public function a_player_can_create_a_lobby(): void
     {
         Carbon::setTestNow(now());
 

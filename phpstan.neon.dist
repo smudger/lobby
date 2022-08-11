@@ -3,6 +3,8 @@ parameters:
     ignoreErrors:
         - '#^Property App\\Domain\\Exceptions\\.*Exception\:\:\$message has no type specified\.$#'
         - '#^Call to an undefined method Illuminate\\Http\\RedirectResponse\|Illuminate\\Routing\\Redirector\:\:route\(\)\.$#'
+        - '#^Call to an undefined method Illuminate\\Testing\\TestResponse\:\:assertInertia\(\)\.$#'
+        - '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Response\:\:status\(\)\.$#'
     level: max
     paths:
         - app
