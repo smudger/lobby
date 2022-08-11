@@ -10,3 +10,5 @@ Route::post('/lobbies', [LobbyController::class, 'store'])->name('lobby.store');
 Route::get('/lobbies/{id}', [LobbyController::class, 'show'])->name('lobby.show');
 
 Route::post('/members', [MemberController::class, 'store'])->name('members.store');
+
+Route::inertia('/test', 'Test');

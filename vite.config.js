@@ -47,5 +47,8 @@ function detectServerConfig(host) {
             key: fs.readFileSync(keyPath),
             cert: fs.readFileSync(certificatePath),
         },
+        watch: {
+            usePolling: true,
+        },
     };
 }
