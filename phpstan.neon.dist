@@ -5,6 +5,7 @@ parameters:
         - '#^Call to an undefined method Illuminate\\Http\\RedirectResponse\|Illuminate\\Routing\\Redirector\:\:route\(\)\.$#'
         - '#^Call to an undefined method Illuminate\\Testing\\TestResponse\:\:assertInertia\(\)\.$#'
         - '#^Call to an undefined method Symfony\\Component\\HttpFoundation\\Response\:\:status\(\)\.$#'
+        - '#^Cannot call method once\(\) on mixed\.$#'
     level: max
     paths:
         - app
