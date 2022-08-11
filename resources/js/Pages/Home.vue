@@ -1,5 +1,5 @@
 <script setup>
-import JoinLobbyButton from "@/components/JoinLobbyButton.vue";
+import JoinLobbyButton from "@/Components/JoinLobbyButton.vue";
 </script>
 
 <template>
