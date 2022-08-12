@@ -58,7 +58,7 @@ const form = useForm({
                             <LobbyCodeInput
                                 v-model="form.lobby_id"
                                 :length="4"
-                                :invalid="form.errors.lobby_id"
+                                :invalid="!!form.errors.lobby_id"
                                 :aria-invalid="form.errors.lobby_id"
                                 aria-describedby="lobby-id-error"
                                 required

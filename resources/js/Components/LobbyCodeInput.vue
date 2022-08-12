@@ -94,9 +94,10 @@ const handleKeydown = (event) => {
 };
 
 const handlePaste = (event) => {
-    for (const index in characters.value) {
-        characters.value[index] = event.clipboardData.getData("text")[index];
-    }
+    characters.value = event.clipboardData
+        .getData("text")
+        .slice(0, characters.value.length)
+        .split("");
 };
 </script>
 
@@ -104,7 +105,7 @@ const handlePaste = (event) => {
     <div class="bg-white w-80 rounded-md shadow-sm">
         <div class="flex">
             <div
-                v-for="index in characters.length"
+                v-for="index in props.length"
                 :key="index"
                 class="flex-1 min-w-0"
             >
@@ -119,7 +120,7 @@ const handlePaste = (event) => {
                     class="caret-transparent uppercase font-mono w-20 text-center text-5xl relative block w-full rounded-none bg-transparent focus:ring-2 focus:z-10"
                     :class="{
                         'rounded-l-md': index === 1,
-                        'rounded-r-md': index === characters.length,
+                        'rounded-r-md': index === props.length,
                         'border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 focus:text-indigo-700':
                             !props.invalid,
                         'border-red-500 text-red-600 placeholder-red-300 focus:ring-red-500 focus:border-red-500':
