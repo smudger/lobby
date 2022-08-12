@@ -8,6 +8,7 @@ import {
     DialogDescription,
 } from "@headlessui/vue";
 import { ExclamationCircleIcon } from "@heroicons/vue/solid";
+import LobbyCodeInput from "@/Components/LobbyCodeInput.vue";
 
 const isOpen = ref(false);
 
@@ -48,38 +49,22 @@ const form = useForm({
 
                 <form class="mt-10" @submit.prevent="form.post('/members')">
                     <div>
-                        <label
-                            for="lobby-id"
-                            class="block text-sm font-medium text-indigo-200"
-                            >Lobby Code</label
-                        >
-                        <div class="mt-1 relative rounded-md shadow-sm">
-                            <input
-                                id="lobby-id"
+                        <label>
+                            <span
+                                class="mb-2 block text-sm font-medium text-indigo-200"
+                            >
+                                Lobby Code
+                            </span>
+                            <LobbyCodeInput
                                 v-model="form.lobby_id"
-                                type="text"
-                                name="lobby-id"
-                                class="uppercase font-mono block w-full pr-10 focus:outline-none sm:text-sm rounded-md"
-                                :class="{
-                                    'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500':
-                                        form.errors.lobby_id,
-                                }"
-                                placeholder="XXXX"
+                                :length="4"
+                                :invalid="form.errors.lobby_id"
                                 :aria-invalid="form.errors.lobby_id"
                                 aria-describedby="lobby-id-error"
                                 required
                                 @keyup="() => form.clearErrors('lobby_id')"
                             />
-                            <div
-                                v-if="form.errors.lobby_id"
-                                class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
-                            >
-                                <ExclamationCircleIcon
-                                    class="h-5 w-5 text-red-500"
-                                    aria-hidden="true"
-                                />
-                            </div>
-                        </div>
+                        </label>
                         <p
                             v-if="form.errors.lobby_id"
                             id="lobby-id-error"
