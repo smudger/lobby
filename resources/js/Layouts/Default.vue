@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive, computed, onUnmounted, onMounted } from "vue";
+import { ref, reactive, computed, onMounted } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
 import { UserIcon } from "@heroicons/vue/solid";
 import {
@@ -18,7 +18,7 @@ import {
 } from "@heroicons/vue/outline";
 import { LogoutIcon } from "@heroicons/vue/solid";
 
-const lobbyId = computed(() => usePage().props.value.lobby.id);
+const lobbyId = computed(() => usePage().props.value.lobby?.id);
 
 const sidebarNavigation = computed(() => [
     {
@@ -63,10 +63,6 @@ onMounted(() => {
             });
         }
     );
-});
-
-onUnmounted(() => {
-    Echo.leaveChannel(`lobby.${lobbyId.value}`);
 });
 
 const mobileMenuOpen = ref(false);
