@@ -20,4 +20,9 @@ interface LobbyRepository
      * @throws LobbyNotAllocatedException
      */
     public function findById(LobbyId $id): Lobby;
+
+    /**
+     * @throws LobbyNotAllocatedException
+     */
+    public function save(Lobby $lobby): void;
 }

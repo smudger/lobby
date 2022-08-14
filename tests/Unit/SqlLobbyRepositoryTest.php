@@ -30,6 +30,7 @@ class SqlLobbyRepositoryTest extends TestCase
                 ->map(fn (string $secondLetterGroup) => [
                     'id' => $firstLetterGroup.$secondLetterGroup,
                     'allocated_at' => now(),
+                    'members' => json_encode([]),
                 ])
                 ->toArray();
 

@@ -36,6 +36,11 @@ class CreateMemberRequest extends FormRequest
                 'string',
                 'max:100',
             ],
+            'socket_id' => [
+                'required',
+                'string',
+                'max:255',
+            ],
         ];
     }
 }

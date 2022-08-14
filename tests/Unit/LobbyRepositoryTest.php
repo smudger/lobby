@@ -3,7 +3,9 @@
 namespace Tests\Unit;
 
 use App\Domain\Exceptions\LobbyNotAllocatedException;
+use App\Domain\Models\Lobby;
 use App\Domain\Models\LobbyId;
+use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
 use PHPUnit\Framework\Assert;
 
@@ -46,6 +48,44 @@ trait LobbyRepositoryTest
             $repository->findById(LobbyId::fromString('AAAA'));
 
             Assert::fail('No exception thrown despite lobby not allocated.');
+        } catch (LobbyNotAllocatedException $e) {
+            Assert::assertEquals('The lobby with the given ID has not been allocated.', $e->getMessage());
+        }
+    }
+
+    /** @test */
+    public function it_saves_an_updated_lobby(): void
+    {
+        $repository = $this->getRepository();
+
+        $lobby = $repository->allocate();
+
+        $member = new Member(
+            socketId: '123.456',
+            name: 'Ayesha Nicole',
+        );
+
+        $lobby->addMember($member);
+
+        $repository->save($lobby);
+
+        $updatedLobby = $repository->findById($lobby->id);
+
+        Assert::assertCount(1, $updatedLobby->members());
+        Assert::assertTrue($updatedLobby->members()[0]->equals($member));
+    }
+
+    /** @test */
+    public function it_throws_an_exception_when_saving_a_lobby_that_has_not_been_allocated(): void
+    {
+        $repository = $this->getRepository();
+
+        $lobby = new Lobby(LobbyId::fromString('AAAA'));
+
+        try {
+            $repository->save($lobby);
+
+            Assert::fail('No exception thrown despite lobby not allocated');
         } catch (LobbyNotAllocatedException $e) {
             Assert::assertEquals('The lobby with the given ID has not been allocated.', $e->getMessage());
         }

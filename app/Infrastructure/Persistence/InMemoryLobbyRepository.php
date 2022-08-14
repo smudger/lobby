@@ -23,11 +23,14 @@ class InMemoryLobbyRepository implements LobbyRepository
 
     public function findById(LobbyId $id): Lobby
     {
-        if (! array_key_exists($id->__toString(), $this->lobbies)) {
-            throw new LobbyNotAllocatedException();
-        }
+        $this->checkLobbyIdIsAllocated($id);
 
-        return $this->lobbies[$id->__toString()];
+        $storedLobby = $this->lobbies[$id->__toString()];
+
+        return new Lobby(
+            id: $storedLobby->id,
+            members: $storedLobby->members(),
+        );
     }
 
     public function allocate(): Lobby
@@ -43,6 +46,20 @@ class InMemoryLobbyRepository implements LobbyRepository
         $lobby = new Lobby(LobbyId::fromString($rawId));
         $this->lobbies[$rawId] = $lobby;
 
-        return $lobby;
+        return $this->findById($lobby->id);
+    }
+
+    public function save(Lobby $lobby): void
+    {
+        $this->checkLobbyIdIsAllocated($lobby->id);
+
+        $this->lobbies[$lobby->id->__toString()] = $lobby;
+    }
+
+    private function checkLobbyIdIsAllocated(LobbyId $id): void
+    {
+        if (! array_key_exists($id->__toString(), $this->lobbies)) {
+            throw new LobbyNotAllocatedException();
+        }
     }
 }
