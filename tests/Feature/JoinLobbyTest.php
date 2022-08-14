@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Domain\Models\Lobby;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use PHPUnit\Framework\Assert;
@@ -15,7 +16,7 @@ class JoinLobbyTest extends TestCase
         $repository = new InMemoryLobbyRepository();
         $this->app->instance(LobbyRepository::class, $repository);
 
-        $lobby = $repository->allocate();
+        $lobby = new Lobby($repository->allocate());
 
         $response = $this->post('/members', [
             'lobby_id' => $lobby->id->__toString(),

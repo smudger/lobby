@@ -6,6 +6,7 @@ use App\Application\CreateMemberCommand;
 use App\Application\CreateMemberHandler;
 use App\Domain\Events\MemberJoinedLobby;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
+use App\Domain\Models\Lobby;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Facades\Event;
 use InvalidArgumentException;
@@ -25,7 +26,7 @@ class CreateMemberHandlerTest extends TestCase
     public function it_adds_a_new_member_to_the_lobby(): void
     {
         $repository = new InMemoryLobbyRepository();
-        $lobby = $repository->allocate();
+        $lobby = new Lobby($repository->allocate());
 
         $command = new CreateMemberCommand(
             lobby_id: $lobby->id->__toString(),
@@ -50,7 +51,7 @@ class CreateMemberHandlerTest extends TestCase
     public function it_dispatches_an_event(): void
     {
         $repository = new InMemoryLobbyRepository();
-        $lobby = $repository->allocate();
+        $lobby = new Lobby($repository->allocate());
 
         $command = new CreateMemberCommand(
             lobby_id: $lobby->id->__toString(),
@@ -91,7 +92,7 @@ class CreateMemberHandlerTest extends TestCase
     public function it_throws_an_exception_if_the_name_is_empty(): void
     {
         $repository = new InMemoryLobbyRepository();
-        $lobby = $repository->allocate();
+        $lobby = new Lobby($repository->allocate());
 
         $command = new CreateMemberCommand(
             lobby_id: $lobby->id->__toString(),
@@ -114,7 +115,7 @@ class CreateMemberHandlerTest extends TestCase
     public function it_throws_an_exception_if_the_socket_id_is_empty(): void
     {
         $repository = new InMemoryLobbyRepository();
-        $lobby = $repository->allocate();
+        $lobby = new Lobby($repository->allocate());
 
         $command = new CreateMemberCommand(
             lobby_id: $lobby->id->__toString(),

@@ -42,7 +42,7 @@ class SqlLobbyRepository implements LobbyRepository
         );
     }
 
-    public function allocate(): Lobby
+    public function allocate(): LobbyId
     {
         /** @var ?stdClass */
         $row = DB::table('lobby_ids')
@@ -70,7 +70,7 @@ class SqlLobbyRepository implements LobbyRepository
             throw new LobbyAllocationException(previous: $e);
         }
 
-        return new Lobby(LobbyId::fromString($row->id));
+        return LobbyId::fromString($row->id);
     }
 
     public function save(Lobby $lobby): void

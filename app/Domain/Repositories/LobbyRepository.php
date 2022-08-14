@@ -14,7 +14,7 @@ interface LobbyRepository
      * @throws NoMoreLobbiesException
      * @throws LobbyAllocationException
      */
-    public function allocate(): Lobby;
+    public function allocate(): LobbyId;
 
     /**
      * @throws LobbyNotAllocatedException

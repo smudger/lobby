@@ -16,7 +16,7 @@ trait LobbyRepositoryTest
     abstract public function it_throws_an_exception_if_there_are_no_more_lobbies_available(): void;
 
     /** @test */
-    public function it_doesnt_return_a_lobby_that_has_already_been_allocated(): void
+    public function it_doesnt_return_a_lobby_id_that_has_already_been_allocated(): void
     {
         $repository = $this->getRepository();
 
@@ -30,13 +30,13 @@ trait LobbyRepositoryTest
     }
 
     /** @test */
-    public function it_can_allocate_a_lobby(): void
+    public function it_can_allocate_a_lobby_id(): void
     {
         $repository = $this->getRepository();
 
-        $lobby = $repository->allocate();
+        $lobbyId = $repository->allocate();
 
-        Assert::assertTrue($lobby->equals($repository->findById($lobby->id)));
+        Assert::assertTrue($lobbyId->equals($repository->findById($lobbyId)->id));
     }
 
     /** @test */
@@ -58,7 +58,7 @@ trait LobbyRepositoryTest
     {
         $repository = $this->getRepository();
 
-        $lobby = $repository->allocate();
+        $lobby = new Lobby($repository->allocate());
 
         $member = new Member(
             socketId: '123.456',

@@ -33,7 +33,7 @@ class InMemoryLobbyRepository implements LobbyRepository
         );
     }
 
-    public function allocate(): Lobby
+    public function allocate(): LobbyId
     {
         if (count($this->lobbies) === (26 ** 4)) {
             throw new NoMoreLobbiesException();
@@ -46,7 +46,7 @@ class InMemoryLobbyRepository implements LobbyRepository
         $lobby = new Lobby(LobbyId::fromString($rawId));
         $this->lobbies[$rawId] = $lobby;
 
-        return $this->findById($lobby->id);
+        return $lobby->id;
     }
 
     public function save(Lobby $lobby): void

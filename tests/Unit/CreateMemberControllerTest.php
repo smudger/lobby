@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Application\CreateMemberCommand;
 use App\Application\CreateMemberHandler;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
+use App\Domain\Models\Lobby;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Str;
@@ -27,7 +28,7 @@ class CreateMemberControllerTest extends TestCase
         $repository = new InMemoryLobbyRepository();
         $this->app->instance(LobbyRepository::class, $repository);
 
-        $lobby = $repository->allocate();
+        $lobby = new Lobby($repository->allocate());
 
         $this->post('/members', [
             'lobby_id' => $lobby->id->__toString(),

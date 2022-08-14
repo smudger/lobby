@@ -14,7 +14,9 @@ class CreateLobbyHandler
 
     public function execute(): Lobby
     {
-        $lobby = $this->repository->allocate();
+        $lobbyId = $this->repository->allocate();
+
+        $lobby = new Lobby($lobbyId);
 
         return $lobby;
     }
