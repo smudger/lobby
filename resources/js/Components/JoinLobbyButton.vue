@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import {
     Dialog,
@@ -19,6 +19,17 @@ function setIsOpen(value) {
 const form = useForm({
     lobby_id: null,
     name: null,
+    socket_id: Echo.socketId(),
+});
+
+onMounted(() => {
+    Echo.connector.pusher.connection.bind("connected", () => {
+        form.socket_id = Echo.socketId();
+    });
+});
+
+onUnmounted(() => {
+    Echo.connector.pusher.connection.unbind("connected");
 });
 </script>
 
