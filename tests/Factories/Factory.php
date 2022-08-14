@@ -22,8 +22,8 @@ abstract class Factory
         return $this;
     }
 
-    /** @param  mixed[]  $overrides */
-    public function create(array ...$overrides): mixed
+    /** @phpstan-ignore-next-line  */
+    public function create(...$overrides): mixed
     {
         return $this->count === 1
             ? $this->createOne($overrides)

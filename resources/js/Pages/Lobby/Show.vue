@@ -20,26 +20,29 @@ import {
 import { LogoutIcon } from "@heroicons/vue/solid";
 
 const props = defineProps({
-    id: String,
+    lobby: Object,
 });
 
 onMounted(() => {
-    Echo.channel(`lobby.${props.id}`).listen(".lobby.members.joined", () => {
-        timeline.push({
-            id: 1,
-            content: "Member joined lobby",
-            target: `${props.id}`,
-            href: `/lobbies/${props.id}`,
-            date: "Sep 20",
-            datetime: "2020-09-20",
-            icon: UserIcon,
-            iconBackground: "bg-gray-400",
-        });
-    });
+    Echo.channel(`lobby.${props.lobby.id}`).listen(
+        ".lobby.members.joined",
+        () => {
+            timeline.push({
+                id: 1,
+                content: "Member joined lobby",
+                target: `${props.lobby.id}`,
+                href: `/lobbies/${props.lobby.id}`,
+                date: "Sep 20",
+                datetime: "2020-09-20",
+                icon: UserIcon,
+                iconBackground: "bg-gray-400",
+            });
+        }
+    );
 });
 
 onUnmounted(() => {
-    Echo.leaveChannel(`lobby.${props.id}`);
+    Echo.leaveChannel(`lobby.${props.lobby.id}`);
 });
 
 const sidebarNavigation = [
@@ -57,7 +60,7 @@ const timeline = reactive([]);
 </script>
 
 <template>
-    <Head :title="`Lobby ${id}`" />
+    <Head :title="`Lobby ${lobby.id}`" />
 
     <div class="h-full flex">
         <!-- Narrow sidebar -->
@@ -225,7 +228,7 @@ const timeline = reactive([]);
                             class="text-gray-800 text-2xl flex flex-1 items-center"
                         >
                             <span class="text-3xl text-indigo-300 mr-2">#</span>
-                            <span class="font-mono">{{ id }}</span>
+                            <span class="font-mono">{{ lobby.id }}</span>
                         </h1>
                         <div
                             class="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6"
