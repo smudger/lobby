@@ -1,5 +1,5 @@
 <script setup>
-import { ref, reactive } from "vue";
+import { ref, reactive, onUnmounted, onMounted } from "vue";
 import { UserIcon } from "@heroicons/vue/solid";
 import {
     Dialog,
@@ -23,6 +23,25 @@ const props = defineProps({
     id: String,
 });
 
+onMounted(() => {
+    Echo.channel(`lobby.${props.id}`).listen(".lobby.members.joined", () => {
+        timeline.push({
+            id: 1,
+            content: "Member joined lobby",
+            target: `${props.id}`,
+            href: `/lobbies/${props.id}`,
+            date: "Sep 20",
+            datetime: "2020-09-20",
+            icon: UserIcon,
+            iconBackground: "bg-gray-400",
+        });
+    });
+});
+
+onUnmounted(() => {
+    Echo.leaveChannel(`lobby.${props.id}`);
+});
+
 const sidebarNavigation = [
     { name: "Home", href: "#", icon: HomeIcon, current: false },
     { name: "All Files", href: "#", icon: ViewGridIcon, current: false },
@@ -35,19 +54,6 @@ const sidebarNavigation = [
 const mobileMenuOpen = ref(false);
 
 const timeline = reactive([]);
-
-Echo.channel(`lobby.${props.id}`).listen(".lobby.members.joined", () => {
-    timeline.push({
-        id: 1,
-        content: "Member joined lobby",
-        target: `${props.id}`,
-        href: `/lobbies/${props.id}`,
-        date: "Sep 20",
-        datetime: "2020-09-20",
-        icon: UserIcon,
-        iconBackground: "bg-gray-400",
-    });
-});
 </script>
 
 <template>
@@ -224,7 +230,9 @@ Echo.channel(`lobby.${props.id}`).listen(".lobby.members.joined", () => {
                         <div
                             class="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6"
                         >
-                            <button
+                            <Link
+                                href="/"
+                                as="button"
                                 type="button"
                                 class="flex text-indigo-600 p-1 rounded-full items-center justify-center text-white border-2 border-transparent focus:outline-none focus:border-current hover:text-indigo-500"
                             >
@@ -233,7 +241,7 @@ Echo.channel(`lobby.${props.id}`).listen(".lobby.members.joined", () => {
                                     aria-hidden="true"
                                 />
                                 <span class="sr-only">Leave Lobby</span>
-                            </button>
+                            </Link>
                         </div>
                     </div>
                 </div>
