@@ -6,6 +6,7 @@ import { InertiaProgress } from "@inertiajs/progress";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
+import Default from "@/Layouts/Default.vue";
 
 window.Pusher = Pusher;
 
@@ -21,11 +22,21 @@ const appName =
 
 createInertiaApp({
     title: (title) => `${title} - ${appName}`,
-    resolve: (name) =>
-        resolvePageComponent(
+    resolve: (name) => {
+        const page = resolvePageComponent(
             `./Pages/${name}.vue`,
             import.meta.glob("./Pages/**/*.vue")
-        ),
+        );
+        page.then((module) => {
+            if (
+                module.default.layout === undefined &&
+                !name.startsWith("Public/")
+            ) {
+                module.default.layout = Default;
+            }
+        });
+        return page;
+    },
     setup({ el, app, props, plugin }) {
         return createApp({ render: () => h(app, props) })
             .use(plugin)

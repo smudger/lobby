@@ -70,7 +70,7 @@ class Handler extends ExceptionHandler
         $isLowerEnvironment = $app->environment(['local', 'testing']);
 
         if (! $isLowerEnvironment && in_array($response->status(), [500, 503, 404, 403], true)) {
-            return Inertia::render('Error', ['status' => $response->status()])
+            return Inertia::render('Public/Error', ['status' => $response->status()])
                 ->toResponse($request)
                 ->setStatusCode($response->status());
         } elseif ($response->status() === 419) {
