@@ -34,7 +34,6 @@ class ViewLobbyTest extends TestCase
                 ->where('id', $lobby->id->__toString())
                 ->where('members', collect($lobby->members())
                     ->map(fn (Member $member) => [
-                        'socket_id' => $member->socketId,
                         'name' => $member->name,
                     ])
                     ->toArray()

@@ -5,23 +5,11 @@ export default {
 </script>
 
 <script setup>
-import { onMounted, onUnmounted } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { ExclamationCircleIcon } from "@heroicons/vue/solid";
 
 const form = useForm({
     name: null,
-    socket_id: Echo.socketId(),
-});
-
-onMounted(() => {
-    Echo.connector.pusher.connection.bind("connected", () => {
-        form.socket_id = Echo.socketId();
-    });
-});
-
-onUnmounted(() => {
-    Echo.connector.pusher.connection.unbind("connected");
 });
 </script>
 
@@ -48,6 +36,7 @@ onUnmounted(() => {
                         <input
                             id="name"
                             v-model="form.name"
+                            autofocus
                             type="text"
                             name="name"
                             class="block w-full pr-10 focus:outline-none sm:text-sm rounded-md"

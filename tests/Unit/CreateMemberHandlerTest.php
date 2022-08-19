@@ -31,7 +31,6 @@ class CreateMemberHandlerTest extends TestCase
         $command = new CreateMemberCommand(
             lobby_id: $lobby->id->__toString(),
             name: 'Ayesha Nicole',
-            socket_id: '123.456',
         );
 
         $handler = new CreateMemberHandler($repository);
@@ -43,7 +42,6 @@ class CreateMemberHandlerTest extends TestCase
         Assert::assertCount(1, $updatedLobby->members());
         $member = $updatedLobby->members()[0];
 
-        Assert::assertEquals('123.456', $member->socketId);
         Assert::assertEquals('Ayesha Nicole', $member->name);
     }
 
@@ -56,7 +54,6 @@ class CreateMemberHandlerTest extends TestCase
         $command = new CreateMemberCommand(
             lobby_id: $lobby->id->__toString(),
             name: 'Ayesha Nicole',
-            socket_id: '123.456',
         );
 
         $handler = new CreateMemberHandler($repository);
@@ -74,7 +71,6 @@ class CreateMemberHandlerTest extends TestCase
         $command = new CreateMemberCommand(
             lobby_id: 'AAAA',
             name: 'Ayesha Nicole',
-            socket_id: '123.456',
         );
 
         $handler = new CreateMemberHandler($repository);
@@ -97,7 +93,6 @@ class CreateMemberHandlerTest extends TestCase
         $command = new CreateMemberCommand(
             lobby_id: $lobby->id->__toString(),
             name: '',
-            socket_id: '123.456',
         );
 
         $handler = new CreateMemberHandler($repository);
@@ -108,29 +103,6 @@ class CreateMemberHandlerTest extends TestCase
             Assert::fail('No exception thrown despite empty name.');
         } catch (InvalidArgumentException $e) {
             Assert::assertEquals('The name cannot be empty.', $e->getMessage());
-        }
-    }
-
-    /** @test */
-    public function it_throws_an_exception_if_the_socket_id_is_empty(): void
-    {
-        $repository = new InMemoryLobbyRepository();
-        $lobby = new Lobby($repository->allocate());
-
-        $command = new CreateMemberCommand(
-            lobby_id: $lobby->id->__toString(),
-            name: 'Ayesha Nicole',
-            socket_id: '',
-        );
-
-        $handler = new CreateMemberHandler($repository);
-
-        try {
-            $handler->execute($command);
-
-            Assert::fail('No exception thrown despite empty name.');
-        } catch (InvalidArgumentException $e) {
-            Assert::assertEquals('The socket id cannot be empty.', $e->getMessage());
         }
     }
 }

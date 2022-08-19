@@ -11,7 +11,6 @@ class MemberFactory extends Factory
     protected function definition(): array
     {
         return [
-            'socketId' => $this->faker->numerify('###.###'),
             'name' => $this->faker->name(),
         ];
     }

@@ -61,7 +61,6 @@ trait LobbyRepositoryTest
         $lobby = new Lobby($repository->allocate());
 
         $member = new Member(
-            socketId: '123.456',
             name: 'Ayesha Nicole',
         );
 

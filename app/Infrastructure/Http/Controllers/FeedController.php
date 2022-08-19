@@ -23,7 +23,6 @@ class FeedController
             'id' => $lobby->id->__toString(),
             'members' => collect($lobby->members())
                 ->map(fn (Member $member) => [
-                    'socket_id' => $member->socketId,
                     'name' => $member->name,
                 ])
                 ->toArray(),

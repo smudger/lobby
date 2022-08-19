@@ -12,7 +12,7 @@ class Lobby
         /** @var Member[] $membersWithKeys */
         $membersWithKeys = collect($members)
             ->mapWithKeys(fn (Member $member) => [
-                $member->socketId => $member,
+                $member->name => $member,
             ])
             ->toArray();
 
@@ -27,7 +27,7 @@ class Lobby
 
     public function addMember(Member $member): void
     {
-        $this->members[$member->socketId] = $member;
+        $this->members[$member->name] = $member;
     }
 
     public function equals(mixed $other): bool

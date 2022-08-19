@@ -33,7 +33,6 @@ class CreateMemberControllerTest extends TestCase
         $this->post('/members', [
             'lobby_id' => $lobby->id->__toString(),
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $handler->shouldHaveReceived('execute')
@@ -56,7 +55,6 @@ class CreateMemberControllerTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => 'AAAA',
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertSessionHasErrors([
@@ -70,7 +68,6 @@ class CreateMemberControllerTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => 'aaaa',
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertRedirect(route('lobby.show', ['id' => 'AAAA']));
@@ -81,7 +78,6 @@ class CreateMemberControllerTest extends TestCase
     {
         $response = $this->post('/members', [
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertSessionHasErrors([
@@ -95,7 +91,6 @@ class CreateMemberControllerTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => ['not a string'],
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertSessionHasErrors([
@@ -109,7 +104,6 @@ class CreateMemberControllerTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => 'AAA',
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertSessionHasErrors([
@@ -119,7 +113,6 @@ class CreateMemberControllerTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => 'AAAAA',
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertSessionHasErrors([
@@ -132,7 +125,6 @@ class CreateMemberControllerTest extends TestCase
     {
         $response = $this->post('/members', [
             'lobby_id' => 'AAAA',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertSessionHasErrors([
@@ -146,7 +138,6 @@ class CreateMemberControllerTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => 'AAAA',
             'name' => ['not a string'],
-            'socket_id' => '123.456',
         ]);
 
         $response->assertSessionHasErrors([
@@ -160,52 +151,10 @@ class CreateMemberControllerTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => 'AAAA',
             'name' => Str::random(101),
-            'socket_id' => '123.456',
         ]);
 
         $response->assertSessionHasErrors([
             'name' => 'The name must not be greater than 100 characters.',
-        ]);
-    }
-
-    /** @test */
-    public function the_socket_id_is_required(): void
-    {
-        $response = $this->post('/members', [
-            'lobby_id' => 'AAAA',
-            'name' => 'Ayesha Nicole',
-        ]);
-
-        $response->assertSessionHasErrors([
-            'socket_id' => 'The socket id field is required.',
-        ]);
-    }
-
-    /** @test */
-    public function the_socket_id_must_be_a_string(): void
-    {
-        $response = $this->post('/members', [
-            'lobby_id' => 'AAAA',
-            'name' => 'Ayesha Nicole',
-            'socket_id' => ['not a string'],
-        ]);
-
-        $response->assertSessionHasErrors([
-            'socket_id' => 'The socket id must be a string.',
-        ]);
-    }
-
-    /** @test */
-    public function the_socket_id_must_not_be_greater_than_255_characters(): void
-    {
-        $response = $this->post('/members', [
-            'lobby_id' => 'AAAA',
-            'name' => 'Ayesha Nicole',
-            'socket_id' => Str::random(256),
-        ]);
-
-        $response->assertSessionHasErrors([
-            'socket_id' => 'The socket id must not be greater than 255 characters.',
         ]);
     }
 }

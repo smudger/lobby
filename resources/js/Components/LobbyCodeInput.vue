@@ -12,6 +12,7 @@ const props = defineProps({
     modelValue: String,
     length: Number,
     invalid: Boolean,
+    autofocus: { type: Boolean, default: false },
 });
 const emit = defineEmits(["update:modelValue"]);
 
@@ -21,6 +22,8 @@ onMounted(() => {
     characters.value = new Array(props.length).map(
         (_, index) => (props.modelValue || "")[index]
     );
+
+    if (props.autofocus) document.getElementById("letter-1").focus();
 });
 
 watch(

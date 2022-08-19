@@ -26,14 +26,9 @@ class CreateMemberHandler
             throw new InvalidArgumentException('The name cannot be empty.');
         }
 
-        if (trim($command->socket_id) === '') {
-            throw new InvalidArgumentException('The socket id cannot be empty.');
-        }
-
         $lobby = $this->repository->findById(LobbyId::fromString($command->lobby_id));
 
         $member = new Member(
-            socketId: $command->socket_id,
             name: $command->name,
         );
 

@@ -21,7 +21,6 @@ class JoinLobbyTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => $lobby->id->__toString(),
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertRedirect(route('lobby.show', ['id' => $lobby->id]));
@@ -31,7 +30,6 @@ class JoinLobbyTest extends TestCase
         Assert::assertCount(1, $updatedLobby->members());
         $member = $updatedLobby->members()[0];
 
-        Assert::assertEquals('123.456', $member->socketId);
         Assert::assertEquals('Ayesha Nicole', $member->name);
     }
 
@@ -44,7 +42,6 @@ class JoinLobbyTest extends TestCase
         $response = $this->post('/members', [
             'lobby_id' => 'AAAA',
             'name' => 'Ayesha Nicole',
-            'socket_id' => '123.456',
         ]);
 
         $response->assertRedirect();

@@ -5,7 +5,6 @@ export default {
 </script>
 
 <script setup>
-import { onMounted, onUnmounted } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { ExclamationCircleIcon } from "@heroicons/vue/solid";
 import LobbyCodeInput from "@/Components/LobbyCodeInput.vue";
@@ -13,17 +12,6 @@ import LobbyCodeInput from "@/Components/LobbyCodeInput.vue";
 const form = useForm({
     lobby_id: null,
     name: null,
-    socket_id: Echo.socketId(),
-});
-
-onMounted(() => {
-    Echo.connector.pusher.connection.bind("connected", () => {
-        form.socket_id = Echo.socketId();
-    });
-});
-
-onUnmounted(() => {
-    Echo.connector.pusher.connection.unbind("connected");
 });
 </script>
 
@@ -55,6 +43,7 @@ onUnmounted(() => {
                             :aria-invalid="form.errors.lobby_id"
                             aria-describedby="lobby-id-error"
                             required
+                            autofocus
                             @keyup="() => form.clearErrors('lobby_id')"
                         />
                     </label>
