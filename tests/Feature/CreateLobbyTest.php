@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use PHPUnit\Framework\Assert;
 use Tests\TestCase;
 
 class CreateLobbyTest extends TestCase
@@ -16,7 +17,9 @@ class CreateLobbyTest extends TestCase
     {
         Carbon::setTestNow(now());
 
-        $response = $this->post('/lobbies');
+        $response = $this->post('/lobbies', [
+            'member_name' => 'Ayesha Nicole',
+        ]);
 
         $this->assertDatabaseHas('lobbies', [
             'allocated_at' => now(),
@@ -24,6 +27,9 @@ class CreateLobbyTest extends TestCase
 
         /** @var \stdClass */
         $lobby = DB::table('lobbies')->whereNotNull('allocated_at')->first();
+        Assert::assertEquals([
+            ['name' => 'Ayesha Nicole'],
+        ], json_decode($lobby->members, true));
 
         $response->assertRedirect(route('lobby.show', ['id' => $lobby->id]));
     }

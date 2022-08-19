@@ -9,7 +9,7 @@ import { useForm } from "@inertiajs/inertia-vue3";
 import { ExclamationCircleIcon } from "@heroicons/vue/solid";
 
 const form = useForm({
-    name: null,
+    member_name: null,
 });
 </script>
 
@@ -35,23 +35,23 @@ const form = useForm({
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <input
                             id="name"
-                            v-model="form.name"
+                            v-model="form.member_name"
                             autofocus
                             type="text"
                             name="name"
                             class="block w-full pr-10 focus:outline-none sm:text-sm rounded-md"
                             :class="{
                                 'border-red-300 text-red-900 placeholder-red-300 focus:ring-red-500 focus:border-red-500':
-                                    form.errors.name,
+                                    form.errors.member_name,
                             }"
                             placeholder="Master Chief"
-                            :aria-invalid="form.errors.name"
+                            :aria-invalid="form.errors.member_name"
                             aria-describedby="name-error"
                             required
-                            @keyup="() => form.clearErrors('name')"
+                            @keyup="() => form.clearErrors('member_name')"
                         />
                         <div
-                            v-if="form.errors.name"
+                            v-if="form.errors.member_name"
                             class="absolute inset-y-0 right-0 pr-3 flex items-center pointer-events-none"
                         >
                             <ExclamationCircleIcon
@@ -61,11 +61,11 @@ const form = useForm({
                         </div>
                     </div>
                     <p
-                        v-if="form.errors.name"
+                        v-if="form.errors.member_name"
                         id="name-error"
                         class="mt-2 text-sm font-semibold text-red-600"
                     >
-                        {{ form.errors.name }}
+                        {{ form.errors.member_name }}
                     </p>
                 </div>
 
