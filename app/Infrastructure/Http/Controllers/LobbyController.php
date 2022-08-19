@@ -32,6 +32,11 @@ class LobbyController extends Controller
         ]]);
     }
 
+    public function create(): Response
+    {
+        return Inertia::render('Lobby/Create');
+    }
+
     public function store(CreateLobbyHandler $handler): RedirectResponse
     {
         $lobby = $handler->execute();

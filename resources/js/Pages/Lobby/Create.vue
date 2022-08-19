@@ -8,10 +8,8 @@ export default {
 import { onMounted, onUnmounted } from "vue";
 import { useForm } from "@inertiajs/inertia-vue3";
 import { ExclamationCircleIcon } from "@heroicons/vue/solid";
-import LobbyCodeInput from "@/Components/LobbyCodeInput.vue";
 
 const form = useForm({
-    lobby_id: null,
     name: null,
     socket_id: Echo.socketId(),
 });
@@ -33,45 +31,18 @@ onUnmounted(() => {
     >
         <div class="max-w-2xl">
             <h1 class="text-3xl font-extrabold text-white sm:text-4xl">
-                Join an existing lobby
+                Create a new lobby
             </h1>
             <p class="mt-4 text-lg leading-6 text-indigo-200">
-                Enter the unique 4-digit lobby code and make a name for
-                yourself.
+                Just let us know what you'd like others to call you.
             </p>
 
-            <form class="mt-8" @submit.prevent="form.post('/members')">
-                <div>
-                    <label>
-                        <span
-                            class="mb-2 block text-sm font-medium text-indigo-200"
-                        >
-                            Lobby Code
-                        </span>
-                        <LobbyCodeInput
-                            v-model="form.lobby_id"
-                            :length="4"
-                            :invalid="!!form.errors.lobby_id"
-                            :aria-invalid="form.errors.lobby_id"
-                            aria-describedby="lobby-id-error"
-                            required
-                            @keyup="() => form.clearErrors('lobby_id')"
-                        />
-                    </label>
-                    <p
-                        v-if="form.errors.lobby_id"
-                        id="lobby-id-error"
-                        class="mt-2 text-sm font-semibold text-red-600"
-                    >
-                        {{ form.errors.lobby_id }}
-                    </p>
-                </div>
-
+            <form class="mt-8" @submit.prevent="form.post('/lobbies')">
                 <div class="mt-4">
                     <label
                         for="name"
                         class="block text-sm font-medium text-indigo-200"
-                        >Name</label
+                        >Your Name</label
                     >
                     <div class="mt-1 relative rounded-md shadow-sm">
                         <input
@@ -115,7 +86,7 @@ onUnmounted(() => {
                         class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-indigo-700 bg-white disabled:bg-indigo-100 hover:bg-indigo-100 sm:w-auto"
                         :disabled="form.processing"
                     >
-                        Join Lobby
+                        Create Lobby
                     </button>
                 </div>
             </form>

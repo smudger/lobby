@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Route;
 Route::inertia('/', 'Public/Home');
 
 Route::post('/lobbies', [LobbyController::class, 'store'])->name('lobby.store');
+Route::get('/lobbies/create', [LobbyController::class, 'create'])->name('lobby.create');
 Route::get('/lobbies/{id}', [LobbyController::class, 'show'])->name('lobby.show');
 
 Route::get('/lobbies/{id}/members', [MemberController::class, 'index'])->name('members.index');
