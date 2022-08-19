@@ -2,9 +2,9 @@
 
 namespace App\Domain\Exceptions;
 
-use Exception;
+use RuntimeException;
 
-class NoMoreLobbiesException extends Exception
+class NoMoreLobbiesException extends RuntimeException
 {
     protected $message = 'There are currently no lobbies available for allocation.';
 }

@@ -2,10 +2,10 @@
 
 namespace App\Application;
 
+use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
-use InvalidArgumentException;
 
 class CreateLobbyHandler
 {
@@ -14,10 +14,13 @@ class CreateLobbyHandler
     ) {
     }
 
+    /** @throws ValidationException */
     public function execute(CreateLobbyCommand $command): Lobby
     {
         if (trim($command->member_name) === '') {
-            throw new InvalidArgumentException('The member name cannot be empty.');
+            throw new ValidationException([
+                'member_name' => ['The member name cannot be empty.'],
+            ]);
         }
 
         $lobbyId = $this->repository->allocate();

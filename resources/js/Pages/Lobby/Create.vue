@@ -48,7 +48,7 @@ const form = useForm({
                             :aria-invalid="form.errors.member_name"
                             aria-describedby="name-error"
                             required
-                            @keyup="() => form.clearErrors('member_name')"
+                            @keydown="() => form.clearErrors('member_name')"
                         />
                         <div
                             v-if="form.errors.member_name"

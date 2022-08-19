@@ -2,11 +2,14 @@
 
 namespace App\Infrastructure\Exceptions;
 
+use App\Domain\Exceptions\ValidationException;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Arr;
 use Inertia\Inertia;
 use Symfony\Component\HttpFoundation\Response as SymfonyResponse;
 use Throwable;
@@ -28,7 +31,7 @@ class Handler extends ExceptionHandler
      * @var array<int, class-string<\Throwable>>
      */
     protected $dontReport = [
-        //
+        ValidationException::class,
     ];
 
     /**
@@ -49,8 +52,15 @@ class Handler extends ExceptionHandler
      */
     public function register()
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (ValidationException $e, Request $request) {
+            return $this->shouldReturnJson($request, $e)
+                ? response()->json([
+                    'message' => $e->getMessage(),
+                    'errors' => $e->errors,
+                ], 422)
+                : redirect(url()->previous())
+                    ->withInput(Arr::except($request->input(), $this->dontFlash))
+                    ->withErrors($e->errors);
         });
     }
 

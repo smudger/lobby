@@ -6,10 +6,11 @@ use App\Application\CreateMemberCommand;
 use App\Application\CreateMemberHandler;
 use App\Domain\Events\MemberJoinedLobby;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
+use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Lobby;
+use App\Domain\Models\Member;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Facades\Event;
-use InvalidArgumentException;
 use PHPUnit\Framework\Assert;
 use Tests\TestCase;
 
@@ -101,8 +102,38 @@ class CreateMemberHandlerTest extends TestCase
             $handler->execute($command);
 
             Assert::fail('No exception thrown despite empty name.');
-        } catch (InvalidArgumentException $e) {
-            Assert::assertEquals('The name cannot be empty.', $e->getMessage());
+        } catch (ValidationException $e) {
+            Assert::assertEquals('The given data was invalid.', $e->getMessage());
+            Assert::assertEquals([
+                'name' => ['The name cannot be empty.'],
+            ], $e->errors);
+        }
+    }
+
+    /** @test */
+    public function it_throws_an_exception_if_the_name_has_already_been_taken(): void
+    {
+        $repository = new InMemoryLobbyRepository();
+        $lobby = new Lobby($repository->allocate());
+        $lobby->addMember(new Member(name: 'Ayesha Nicole'));
+        $repository->save($lobby);
+
+        $command = new CreateMemberCommand(
+            lobby_id: $lobby->id->__toString(),
+            name: 'Ayesha Nicole',
+        );
+
+        $handler = new CreateMemberHandler($repository);
+
+        try {
+            $handler->execute($command);
+
+            Assert::fail('No exception thrown despite duplicate name.');
+        } catch (ValidationException $e) {
+            Assert::assertEquals('The given data was invalid.', $e->getMessage());
+            Assert::assertEquals([
+                'name' => ['This name has already been taken.'],
+            ], $e->errors);
         }
     }
 }

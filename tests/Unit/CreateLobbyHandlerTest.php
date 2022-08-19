@@ -4,11 +4,10 @@ namespace Tests\Unit;
 
 use App\Application\CreateLobbyCommand;
 use App\Application\CreateLobbyHandler;
+use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Member;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
-use InvalidArgumentException;
 use PHPUnit\Framework\Assert;
-use PHPUnit\Framework\Test;
 use PHPUnit\Framework\TestCase;
 
 class CreateLobbyHandlerTest extends TestCase
@@ -75,8 +74,10 @@ class CreateLobbyHandlerTest extends TestCase
             $handler->execute($command);
 
             Assert::fail('No exception thrown despite empty name.');
-        } catch (InvalidArgumentException $e) {
-            Assert::assertEquals('The member name cannot be empty.', $e->getMessage());
+        } catch (ValidationException $e) {
+            Assert::assertEquals([
+                'member_name' => ['The member name cannot be empty.'],
+            ], $e->errors);
         }
     }
 }

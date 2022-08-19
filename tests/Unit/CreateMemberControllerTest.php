@@ -5,6 +5,7 @@ namespace Tests\Unit;
 use App\Application\CreateMemberCommand;
 use App\Application\CreateMemberHandler;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
+use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Lobby;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
@@ -60,6 +61,27 @@ class CreateMemberControllerTest extends TestCase
         $response->assertSessionHasErrors([
             'lobby_id' => 'The selected lobby code is invalid.',
         ]);
+    }
+
+    /** @test */
+    public function it_returns_a_validation_error_if_the_handler_throws_a_validation_error(): void
+    {
+        $this->mock(CreateMemberHandler::class, function ($mock) {
+            $mock->shouldReceive('execute')
+                ->andThrow(new ValidationException([
+                    'name' => ['The name is wrong.'],
+                ]));
+        });
+
+        $repository = new InMemoryLobbyRepository();
+        $this->app->instance(LobbyRepository::class, $repository);
+
+        $response = $this->post('/members', [
+            'lobby_id' => 'AAAA',
+            'name' => 'Ayesha Nicole',
+        ]);
+
+        $response->assertSessionHasErrors('name', 'The name is wrong.');
     }
 
     /** @test */

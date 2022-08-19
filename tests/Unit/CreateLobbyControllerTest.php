@@ -4,6 +4,7 @@ namespace Tests\Unit;
 
 use App\Application\CreateLobbyCommand;
 use App\Application\CreateLobbyHandler;
+use App\Domain\Exceptions\ValidationException;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Str;
@@ -67,5 +68,25 @@ class CreateLobbyControllerTest extends TestCase
         $response->assertSessionHasErrors([
             'member_name' => 'The name must not be greater than 100 characters.',
         ]);
+    }
+
+    /** @test */
+    public function it_returns_a_validation_error_if_the_handler_throws_a_validation_error(): void
+    {
+        $this->mock(CreateLobbyHandler::class, function ($mock) {
+            $mock->shouldReceive('execute')
+                ->andThrow(new ValidationException([
+                    'member_name' => ['The name is wrong.'],
+                ]));
+        });
+
+        $repository = new InMemoryLobbyRepository();
+        $this->app->instance(LobbyRepository::class, $repository);
+
+        $response = $this->post('/lobbies', [
+            'member_name' => 'Ayesha Nicole',
+        ]);
+
+        $response->assertSessionHasErrors('member_name', 'The name is wrong.');
     }
 }

@@ -4,11 +4,11 @@ namespace App\Application;
 
 use App\Domain\Events\MemberJoinedLobby;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
+use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\LobbyId;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
 use Illuminate\Support\Facades\Event;
-use InvalidArgumentException;
 
 class CreateMemberHandler
 {
@@ -18,15 +18,25 @@ class CreateMemberHandler
     }
 
     /**
-     * @throws InvalidArgumentException|LobbyNotAllocatedException
+     * @throws ValidationException|LobbyNotAllocatedException
      */
     public function execute(CreateMemberCommand $command): void
     {
         if (trim($command->name) === '') {
-            throw new InvalidArgumentException('The name cannot be empty.');
+            throw new ValidationException([
+                'name' => ['The name cannot be empty.'],
+            ]);
         }
 
         $lobby = $this->repository->findById(LobbyId::fromString($command->lobby_id));
+
+        if (collect($lobby->members())
+            ->filter(fn (Member $member) => $member->name === $command->name)
+            ->isNotEmpty()) {
+            throw new ValidationException([
+                'name' => ['This name has already been taken.'],
+            ]);
+        }
 
         $member = new Member(
             name: $command->name,

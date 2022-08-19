@@ -2,9 +2,9 @@
 
 namespace App\Domain\Exceptions;
 
-use Exception;
+use RuntimeException;
 
-class LobbyNotAllocatedException extends Exception
+class LobbyNotAllocatedException extends RuntimeException
 {
     protected $message = 'The lobby with the given ID has not been allocated.';
 }
