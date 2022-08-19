@@ -1,7 +1,3 @@
-<script setup>
-import JoinLobbyButton from "@/Components/JoinLobbyButton.vue";
-</script>
-
 <template>
     <Head title="Home" />
 
@@ -26,7 +22,12 @@ import JoinLobbyButton from "@/Components/JoinLobbyButton.vue";
                 </Link>
             </div>
             <div class="ml-3 inline-flex">
-                <JoinLobbyButton />
+                <Link
+                    href="/members/create"
+                    class="mt-8 w-full inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-md text-white bg-indigo-500 hover:bg-indigo-600 sm:w-auto"
+                >
+                    Join Lobby
+                </Link>
             </div>
         </div>
     </div>

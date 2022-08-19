@@ -34,6 +34,11 @@ class MemberController extends Controller
         ]]);
     }
 
+    public function create(): Response
+    {
+        return Inertia::render('Member/Create');
+    }
+
     public function store(
         CreateMemberRequest $request,
         CreateMemberHandler $handler,

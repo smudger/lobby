@@ -13,6 +13,7 @@ Route::get('/lobbies/{id}', [LobbyController::class, 'show'])->name('lobby.show'
 
 Route::get('/lobbies/{id}/members', [MemberController::class, 'index'])->name('members.index');
 Route::post('/members', [MemberController::class, 'store'])->name('members.store');
+Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
 
 Route::get('/lobbies/{id}/games', [GameController::class, 'index'])->name('games.index');
 
