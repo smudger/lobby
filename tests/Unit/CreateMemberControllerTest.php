@@ -8,8 +8,12 @@ use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Lobby;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Auth\HasSession;
+use App\Infrastructure\Auth\UserFactory;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Str;
+use Mockery;
+use Tests\Fakes\FakeUserFactory;
 use Tests\TestCase;
 
 class CreateMemberControllerTest extends TestCase
@@ -19,6 +23,7 @@ class CreateMemberControllerTest extends TestCase
         parent::setUp();
 
         $this->spy(CreateMemberHandler::class);
+        $this->app->bind(UserFactory::class, FakeUserFactory::class);
     }
 
     /** @test */
@@ -40,6 +45,31 @@ class CreateMemberControllerTest extends TestCase
             ->once()
             ->withArgs(fn (CreateMemberCommand $command) => $command->lobby_id === $lobby->id->__toString()
             && $command->name === 'Ayesha Nicole');
+    }
+
+    /** @test */
+    public function it_logs_in_the_created_member(): void
+    {
+        $user = Mockery::spy(HasSession::class);
+
+        $userFactory = Mockery::mock(UserFactory::class);
+        $userFactory->shouldReceive('createFromRaw')
+            ->once()
+            ->andReturn($user);
+        $this->app->instance(UserFactory::class, $userFactory);
+
+        $repository = new InMemoryLobbyRepository();
+        $this->app->instance(LobbyRepository::class, $repository);
+
+        $lobby = new Lobby($repository->allocate());
+
+        $this->post('/members', [
+            'lobby_id' => $lobby->id->__toString(),
+            'name' => 'Ayesha Nicole',
+        ]);
+
+        $user->shouldHaveReceived('login')
+            ->once();
     }
 
     /** @test */

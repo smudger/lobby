@@ -8,6 +8,7 @@ use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Models\LobbyId;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Auth\UserFactory;
 use App\Infrastructure\Http\Requests\CreateLobbyRequest;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -41,11 +42,15 @@ class LobbyController extends Controller
     public function store(
         CreateLobbyRequest $request,
         CreateLobbyHandler $handler,
+        UserFactory $authFactory,
     ): RedirectResponse {
         /** @var string[] $params */
         $params = $request->validated();
 
         $lobby = $handler->execute(new CreateLobbyCommand(...$params));
+
+        $authFactory->createFromLobbyMember($lobby, $lobby->members()[0])
+            ->login($request->session());
 
         return redirect()->route('lobby.show', ['id' => $lobby->id]);
     }

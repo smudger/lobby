@@ -5,9 +5,15 @@ namespace Tests\Unit;
 use App\Application\CreateLobbyCommand;
 use App\Application\CreateLobbyHandler;
 use App\Domain\Exceptions\ValidationException;
+use App\Domain\Models\LobbyId;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Auth\HasSession;
+use App\Infrastructure\Auth\UserFactory;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Str;
+use Mockery;
+use Tests\Factories\LobbyFactory;
+use Tests\Fakes\FakeUserFactory;
 use Tests\TestCase;
 
 class CreateLobbyControllerTest extends TestCase
@@ -16,7 +22,11 @@ class CreateLobbyControllerTest extends TestCase
     {
         parent::setUp();
 
-        $this->spy(CreateLobbyHandler::class);
+        $this->mock(CreateLobbyHandler::class, function ($mock) {
+            $mock->shouldReceive('execute')
+                ->andReturn((new LobbyFactory())->create(id: LobbyId::fromString('AAAA')));
+        });
+        $this->app->bind(UserFactory::class, FakeUserFactory::class);
     }
 
     /** @test */
@@ -34,6 +44,29 @@ class CreateLobbyControllerTest extends TestCase
         $handler->shouldHaveReceived('execute')
             ->once()
             ->withArgs(fn (CreateLobbyCommand $command) => $command->member_name === 'Ayesha Nicole');
+    }
+
+    /** @test */
+    public function it_logs_in_the_initial_member(): void
+    {
+        $user = Mockery::spy(HasSession::class);
+
+        $userFactory = Mockery::mock(UserFactory::class);
+
+        $userFactory->shouldReceive('createFromLobbyMember')
+            ->once()
+            ->andReturn($user);
+        $this->app->instance(UserFactory::class, $userFactory);
+
+        $repository = new InMemoryLobbyRepository();
+        $this->app->instance(LobbyRepository::class, $repository);
+
+        $this->post('/lobbies', [
+            'member_name' => 'Ayesha Nicole',
+        ]);
+
+        $user->shouldHaveReceived('login')
+            ->once();
     }
 
     /** @test */

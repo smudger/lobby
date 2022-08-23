@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to an undefined static method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:create\\(\\)\\.$#"
+			count: 1
+			path: app/Infrastructure/Auth/User.php
+
+		-
 			message: "#^Call to an undefined method Illuminate\\\\Contracts\\\\Routing\\\\ResponseFactory\\|Illuminate\\\\Http\\\\Response\\:\\:json\\(\\)\\.$#"
 			count: 1
 			path: app/Infrastructure/Exceptions/Handler.php
@@ -39,3 +44,28 @@ parameters:
 			message: "#^Cannot access property \\$id on mixed\\.$#"
 			count: 1
 			path: app/Infrastructure/Providers/RouteServiceProvider.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Infrastructure\\\\Auth\\\\User\\:\\:\\$lobby_id\\.$#"
+			count: 2
+			path: tests/Feature/Auth/UserTest.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Infrastructure\\\\Auth\\\\User\\:\\:\\$name\\.$#"
+			count: 2
+			path: tests/Feature/Auth/UserTest.php
+
+		-
+			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Auth\\:\\:shouldHaveReceived\\(\\)\\.$#"
+			count: 1
+			path: tests/Feature/Auth/UserTest.php
+
+		-
+			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:once\\(\\)\\.$#"
+			count: 1
+			path: tests/Unit/CreateLobbyControllerTest.php
+
+		-
+			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:once\\(\\)\\.$#"
+			count: 1
+			path: tests/Unit/CreateMemberControllerTest.php

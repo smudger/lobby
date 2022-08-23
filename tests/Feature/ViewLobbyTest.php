@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Http\Middleware\Authenticate;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Inertia\Testing\AssertableInertia;
 use Tests\Factories\LobbyFactory;
@@ -12,6 +13,13 @@ use Tests\TestCase;
 
 class ViewLobbyTest extends TestCase
 {
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->withoutMiddleware([Authenticate::class]);
+    }
+
     /** @test */
     public function a_player_can_view_a_lobby_that_has_been_allocated(): void
     {

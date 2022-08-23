@@ -8,6 +8,7 @@ use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Models\LobbyId;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Auth\UserFactory;
 use App\Infrastructure\Http\Requests\CreateMemberRequest;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -41,6 +42,7 @@ class MemberController extends Controller
     public function store(
         CreateMemberRequest $request,
         CreateMemberHandler $handler,
+        UserFactory $authFactory,
     ): RedirectResponse {
         try {
             /** @var string[] $params */
@@ -52,6 +54,9 @@ class MemberController extends Controller
                 'lobby_id' => trans('validation.exists', ['attribute' => 'lobby code']),
             ]);
         }
+
+        $authFactory->createFromRaw($params)
+            ->login($request->session());
 
         return redirect()->route('lobby.show', ['id' => $request->input('lobby_id')]);
     }

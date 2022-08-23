@@ -4,17 +4,19 @@ namespace Tests\Feature;
 
 use App\Domain\Models\Lobby;
 use App\Domain\Repositories\LobbyRepository;
-use App\Infrastructure\Persistence\InMemoryLobbyRepository;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use PHPUnit\Framework\Assert;
 use Tests\TestCase;
 
 class JoinLobbyTest extends TestCase
 {
+    use RefreshDatabase;
+
     /** @test */
     public function a_player_can_join_a_lobby(): void
     {
-        $repository = new InMemoryLobbyRepository();
-        $this->app->instance(LobbyRepository::class, $repository);
+        /** @var LobbyRepository $repository */
+        $repository = $this->app->make(LobbyRepository::class);
 
         $lobby = new Lobby($repository->allocate());
 
@@ -36,9 +38,6 @@ class JoinLobbyTest extends TestCase
     /** @test */
     public function a_player_cannot_join_a_lobby_that_has_not_been_allocated(): void
     {
-        $repository = new InMemoryLobbyRepository();
-        $this->app->instance(LobbyRepository::class, $repository);
-
         $response = $this->post('/members', [
             'lobby_id' => 'AAAA',
             'name' => 'Ayesha Nicole',
