@@ -31,6 +31,16 @@ parameters:
 			path: app/Infrastructure/Exceptions/Handler.php
 
 		-
+			message: "#^Access to an undefined property App\\\\Infrastructure\\\\Auth\\\\HasSession\\:\\:\\$lobby_id\\.$#"
+			count: 1
+			path: app/Infrastructure/Http/Controllers/MemberController.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Infrastructure\\\\Auth\\\\HasSession\\:\\:\\$member_id\\.$#"
+			count: 1
+			path: app/Infrastructure/Http/Controllers/MemberController.php
+
+		-
 			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$id\\.$#"
 			count: 1
 			path: app/Infrastructure/Http/Middleware/Authenticate.php

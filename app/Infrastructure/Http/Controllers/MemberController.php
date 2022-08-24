@@ -4,6 +4,8 @@ namespace App\Infrastructure\Http\Controllers;
 
 use App\Application\CreateMemberCommand;
 use App\Application\CreateMemberHandler;
+use App\Application\DestroyMemberCommand;
+use App\Application\DestroyMemberHandler;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Models\LobbyId;
 use App\Domain\Models\Member;
@@ -44,12 +46,21 @@ class MemberController extends Controller
         ]);
     }
 
-    public function destroy(Request $request): RedirectResponse
-    {
+    public function destroy(
+        Request $request,
+        DestroyMemberHandler $handler,
+    ): RedirectResponse {
         /** @var HasSession $user */
         $user = Auth::user();
 
         $user->logout($request->session());
+
+        $command = new DestroyMemberCommand(
+            lobby_id: $user->lobby_id,
+            name: $user->member_id,
+        );
+
+        $handler->execute($command);
 
         return redirect()->route('home');
     }
