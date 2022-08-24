@@ -39,7 +39,7 @@ class UserTest extends TestCase
 
         $user = (new User())->createFromRaw([
             'lobby_id' => $lobbyRepository->allocate()->__toString(),
-            'name' => 'Ayesha Nicole',
+            'member_id' => 'Ayesha Nicole',
         ]);
         $session = new Store('session', new ArraySessionHandler(120));
         $oldSessionId = $session->getId();
@@ -64,7 +64,7 @@ class UserTest extends TestCase
         $user = $this->getFactory()->createFromLobbyMember($lobby, $member);
 
         Assert::assertEquals($lobbyId->__toString(), $user->lobby_id);
-        Assert::assertEquals('Ayesha Nicole', $user->name);
+        Assert::assertEquals('Ayesha Nicole', $user->member_id);
     }
 
     /** @test */
@@ -75,10 +75,10 @@ class UserTest extends TestCase
         /** @var User $user */
         $user = $this->getFactory()->createFromRaw([
             'lobby_id' => $lobbyId->__toString(),
-            'name' => 'Ayesha Nicole',
+            'member_id' => 'Ayesha Nicole',
         ]);
 
         Assert::assertEquals($lobbyId->__toString(), $user->lobby_id);
-        Assert::assertEquals('Ayesha Nicole', $user->name);
+        Assert::assertEquals('Ayesha Nicole', $user->member_id);
     }
 }

@@ -9,7 +9,7 @@ class FakeUser implements HasSession
 {
     public function __construct(
         public readonly string $lobby_id,
-        public readonly string $name,
+        public readonly string $member_id,
     ) {
     }
 

@@ -13,7 +13,7 @@ class FakeUserFactory implements UserFactory
     {
         return new FakeUser(
             lobby_id: $lobby->id->__toString(),
-            name: $member->name,
+            member_id: $member->name,
         );
     }
 

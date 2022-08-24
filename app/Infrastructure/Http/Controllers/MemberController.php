@@ -55,7 +55,10 @@ class MemberController extends Controller
             ]);
         }
 
-        $authFactory->createFromRaw($params)
+        $authFactory->createFromRaw([
+            'lobby_id' => $params['lobby_id'],
+            'member_id' => $params['name'],
+        ])
             ->login($request->session());
 
         return redirect()->route('lobby.show', ['id' => $request->input('lobby_id')]);

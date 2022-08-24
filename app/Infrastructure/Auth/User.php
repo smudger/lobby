@@ -15,8 +15,8 @@ class User extends Model implements AuthenticatableContract, UserFactory, HasSes
     use Authenticatable;
 
     protected $fillable = [
-        'name',
         'lobby_id',
+        'member_id',
     ];
 
     protected $hidden = [
@@ -27,7 +27,7 @@ class User extends Model implements AuthenticatableContract, UserFactory, HasSes
     {
         return $this->createFromRaw([
             'lobby_id' => $lobby->id->__toString(),
-            'name' => $member->name,
+            'member_id' => $member->name,
         ]);
     }
 
