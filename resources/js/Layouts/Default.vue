@@ -48,7 +48,7 @@ const sidebarNavigation = computed(() => [
 ]);
 
 onMounted(() => {
-    Echo.channel(`lobby.${lobbyId.value}`).listen(
+    Echo.private(`lobby.${lobbyId.value}`).listen(
         ".lobby.members.joined",
         () => {
             timeline.push({

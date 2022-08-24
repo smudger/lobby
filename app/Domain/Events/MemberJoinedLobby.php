@@ -3,6 +3,7 @@
 namespace App\Domain\Events;
 
 use Illuminate\Broadcasting\Channel;
+use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 
 class MemberJoinedLobby implements ShouldBroadcast
@@ -18,6 +19,6 @@ class MemberJoinedLobby implements ShouldBroadcast
 
     public function broadcastOn(): Channel
     {
-        return new Channel('lobby.'.$this->lobbyId);
+        return new PrivateChannel('lobby.'.$this->lobbyId);
     }
 }
