@@ -8,10 +8,12 @@ use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Models\LobbyId;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Auth\HasSession;
 use App\Infrastructure\Auth\UserFactory;
 use App\Infrastructure\Http\Requests\CreateMemberRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -40,6 +42,16 @@ class MemberController extends Controller
         return Inertia::render('Member/Create', [
             'lobbyId' => $request->query('lobbyId'),
         ]);
+    }
+
+    public function destroy(Request $request): RedirectResponse
+    {
+        /** @var HasSession $user */
+        $user = Auth::user();
+
+        $user->logout($request->session());
+
+        return redirect()->route('home');
     }
 
     public function store(

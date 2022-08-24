@@ -2,6 +2,8 @@
 
 namespace App\Domain\Models;
 
+use App\Domain\Exceptions\MemberNotFoundException;
+
 class Lobby
 {
     public function __construct(
@@ -28,6 +30,15 @@ class Lobby
     public function addMember(Member $member): void
     {
         $this->members[$member->name] = $member;
+    }
+
+    public function removeMember(Member $member): void
+    {
+        if (! isset($this->members[$member->name])) {
+            throw new MemberNotFoundException();
+        }
+
+        unset($this->members[$member->name]);
     }
 
     public function equals(mixed $other): bool

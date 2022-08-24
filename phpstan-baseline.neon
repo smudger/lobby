@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Call to an undefined static method App\\\\Infrastructure\\\\Auth\\\\User\\:\\:find\\(\\)\\.$#"
+			count: 1
+			path: app/Infrastructure/Auth/User.php
+
+		-
 			message: "#^Call to an undefined static method Illuminate\\\\Database\\\\Eloquent\\\\Model\\:\\:create\\(\\)\\.$#"
 			count: 1
 			path: app/Infrastructure/Auth/User.php
@@ -46,6 +51,11 @@ parameters:
 			path: app/Infrastructure/Providers/RouteServiceProvider.php
 
 		-
+			message: "#^Access to an undefined property App\\\\Infrastructure\\\\Auth\\\\User\\:\\:\\$id\\.$#"
+			count: 1
+			path: tests/Feature/Auth/UserTest.php
+
+		-
 			message: "#^Access to an undefined property App\\\\Infrastructure\\\\Auth\\\\User\\:\\:\\$lobby_id\\.$#"
 			count: 2
 			path: tests/Feature/Auth/UserTest.php
@@ -57,8 +67,13 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Auth\\:\\:shouldHaveReceived\\(\\)\\.$#"
-			count: 2
+			count: 1
 			path: tests/Feature/Auth/UserTest.php
+
+		-
+			message: "#^Access to an undefined property App\\\\Infrastructure\\\\Auth\\\\User\\:\\:\\$id\\.$#"
+			count: 1
+			path: tests/Feature/LeaveLobbyTest.php
 
 		-
 			message: "#^Call to an undefined method Mockery\\\\ExpectationInterface\\|Mockery\\\\HigherOrderMessage\\:\\:once\\(\\)\\.$#"

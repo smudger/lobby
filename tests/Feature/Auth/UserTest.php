@@ -66,16 +66,15 @@ class UserTest extends TestCase
         $session = new Store('session', new ArraySessionHandler(120));
         $user->login($session);
 
-        Auth::spy();
         $oldSessionId = $session->getId();
         $oldSessionToken = $session->token();
 
         $user->logout($session);
 
-        Auth::shouldHaveReceived('logout')
-            ->once();
+        Assert::assertFalse(Auth::check());
         Assert::assertNotEquals($oldSessionId, $session->getId());
         Assert::assertNotEquals($oldSessionToken, $session->token());
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
     }
 
     /** @test */

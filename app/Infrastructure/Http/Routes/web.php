@@ -21,4 +21,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/lobbies/{id}/members', [MemberController::class, 'index'])->name('members.index');
     Route::get('/lobbies/{id}/games', [GameController::class, 'index'])->name('games.index');
     Route::get('/lobbies/{id}/feed', [FeedController::class, 'index'])->name('feed.index');
+
+    Route::delete('/members/me', [MemberController::class, 'destroy'])->name('members.destroy');
 });
