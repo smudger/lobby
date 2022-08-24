@@ -9,8 +9,12 @@ import { useForm } from "@inertiajs/inertia-vue3";
 import { ExclamationCircleIcon } from "@heroicons/vue/solid";
 import LobbyCodeInput from "@/Components/LobbyCodeInput.vue";
 
+const props = defineProps({
+    lobbyId: String,
+});
+
 const form = useForm({
-    lobby_id: null,
+    lobby_id: props.lobbyId,
     name: null,
 });
 </script>
@@ -43,7 +47,7 @@ const form = useForm({
                             :aria-invalid="form.errors.lobby_id"
                             aria-describedby="lobby-id-error"
                             required
-                            autofocus
+                            :autofocus="!props.lobbyId"
                             @keyup="() => form.clearErrors('lobby_id')"
                         />
                     </label>
@@ -77,6 +81,7 @@ const form = useForm({
                             :aria-invalid="form.errors.name"
                             aria-describedby="name-error"
                             required
+                            :autofocus="!!props.lobbyId"
                             @keydown="() => form.clearErrors('name')"
                         />
                         <div

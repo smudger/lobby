@@ -11,6 +11,7 @@ use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Auth\UserFactory;
 use App\Infrastructure\Http\Requests\CreateMemberRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\Http\Request;
 use Inertia\Inertia;
 use Inertia\Response;
 
@@ -34,9 +35,11 @@ class MemberController extends Controller
         ]]);
     }
 
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('Member/Create');
+        return Inertia::render('Member/Create', [
+            'lobbyId' => $request->query('lobbyId'),
+        ]);
     }
 
     public function store(

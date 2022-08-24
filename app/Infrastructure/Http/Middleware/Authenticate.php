@@ -15,7 +15,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            return route('members.create');
+            return route('members.create', ['lobbyId' => $request->id]);
         }
 
         return null;

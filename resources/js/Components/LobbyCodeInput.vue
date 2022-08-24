@@ -19,9 +19,9 @@ const emit = defineEmits(["update:modelValue"]);
 const characters = ref([]);
 
 onMounted(() => {
-    characters.value = new Array(props.length).map(
-        (_, index) => (props.modelValue || "")[index]
-    );
+    characters.value = new Array(props.length)
+        .fill(undefined)
+        .map((_, index) => (props.modelValue || "")[index]);
 
     if (props.autofocus) document.getElementById("letter-1").focus();
 });

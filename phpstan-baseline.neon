@@ -26,6 +26,11 @@ parameters:
 			path: app/Infrastructure/Exceptions/Handler.php
 
 		-
+			message: "#^Access to an undefined property Illuminate\\\\Http\\\\Request\\:\\:\\$id\\.$#"
+			count: 1
+			path: app/Infrastructure/Http/Middleware/Authenticate.php
+
+		-
 			message: "#^Construct empty\\(\\) is not allowed\\. Use more strict comparison\\.$#"
 			count: 1
 			path: app/Infrastructure/Http/Middleware/RedirectIfAuthenticated.php
