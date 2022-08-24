@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Http\Middleware;
 
-use App\Infrastructure\Providers\RouteServiceProvider;
 use Closure;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -23,7 +22,10 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(RouteServiceProvider::HOME);
+                /** @var \stdClass $user */
+                $user = Auth::guard($guard)->user();
+
+                return redirect()->route('lobby.show', ['id' => $user->lobby_id]);
             }
         }
 

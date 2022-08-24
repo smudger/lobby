@@ -6,13 +6,15 @@ use App\Infrastructure\Http\Controllers\LobbyController;
 use App\Infrastructure\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Route;
 
-Route::inertia('/', 'Public/Home')->name('home');
+Route::middleware(['guest'])->group(function () {
+    Route::inertia('/', 'Public/Home')->name('home');
 
-Route::get('/lobbies/create', [LobbyController::class, 'create'])->name('lobby.create');
-Route::post('/lobbies', [LobbyController::class, 'store'])->name('lobby.store');
+    Route::get('/lobbies/create', [LobbyController::class, 'create'])->name('lobby.create');
+    Route::post('/lobbies', [LobbyController::class, 'store'])->name('lobby.store');
 
-Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
-Route::post('/members', [MemberController::class, 'store'])->name('members.store');
+    Route::get('/members/create', [MemberController::class, 'create'])->name('members.create');
+    Route::post('/members', [MemberController::class, 'store'])->name('members.store');
+});
 
 Route::middleware(['auth'])->group(function () {
     Route::get('/lobbies/{id}', [LobbyController::class, 'show'])->name('lobby.show');
