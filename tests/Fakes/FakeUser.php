@@ -17,4 +17,9 @@ class FakeUser implements HasSession
     {
         //
     }
+
+    public function logout(Session $session): void
+    {
+        //
+    }
 }

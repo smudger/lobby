@@ -54,6 +54,31 @@ class UserTest extends TestCase
     }
 
     /** @test */
+    public function it_can_logout_a_user_from_a_given_session(): void
+    {
+        /** @var LobbyRepository $lobbyRepository */
+        $lobbyRepository = $this->app->make(LobbyRepository::class);
+
+        $user = (new User())->createFromRaw([
+            'lobby_id' => $lobbyRepository->allocate()->__toString(),
+            'member_id' => 'Ayesha Nicole',
+        ]);
+        $session = new Store('session', new ArraySessionHandler(120));
+        $user->login($session);
+
+        Auth::spy();
+        $oldSessionId = $session->getId();
+        $oldSessionToken = $session->token();
+
+        $user->logout($session);
+
+        Auth::shouldHaveReceived('logout')
+            ->once();
+        Assert::assertNotEquals($oldSessionId, $session->getId());
+        Assert::assertNotEquals($oldSessionToken, $session->token());
+    }
+
+    /** @test */
     public function it_can_create_a_new_user_from_a_lobby_member(): void
     {
         $lobbyId = $this->getLobbyRepository()->allocate();

@@ -42,4 +42,13 @@ class User extends Model implements AuthenticatableContract, UserFactory, HasSes
 
         $session->regenerate();
     }
+
+    public function logout(Session $session): void
+    {
+        Auth::logout();
+
+        $session->invalidate();
+
+        $session->regenerateToken();
+    }
 }

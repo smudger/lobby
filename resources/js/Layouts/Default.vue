@@ -243,7 +243,8 @@ const timeline = reactive([]);
                             class="ml-2 flex items-center space-x-4 sm:ml-6 sm:space-x-6"
                         >
                             <Link
-                                href="/"
+                                href="/members/me"
+                                method="delete"
                                 as="button"
                                 type="button"
                                 class="flex text-indigo-600 p-1 rounded-full items-center justify-center text-white border-2 border-transparent focus:outline-none focus:border-current hover:text-indigo-500"

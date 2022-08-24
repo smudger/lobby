@@ -57,7 +57,7 @@ parameters:
 
 		-
 			message: "#^Call to an undefined static method Illuminate\\\\Support\\\\Facades\\\\Auth\\:\\:shouldHaveReceived\\(\\)\\.$#"
-			count: 1
+			count: 2
 			path: tests/Feature/Auth/UserTest.php
 
 		-
