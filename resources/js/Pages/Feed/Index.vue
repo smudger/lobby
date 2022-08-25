@@ -1,59 +1,73 @@
 <script setup>
 import { UserRemoveIcon, UserAddIcon, HashtagIcon } from "@heroicons/vue/solid";
 import moment from "moment";
+import { onMounted, reactive } from "vue";
 
-const timeline = [
-    {
-        id: 1,
-        content: "Created lobby",
-        target: "AAAA",
-        href: "#",
-        date: "Sep 20",
-        datetime: "2020-09-20",
+const props = defineProps({
+    events: Array,
+    lobby: Object,
+});
+
+const iconMap = {
+    lobby_created: {
         icon: HashtagIcon,
         iconBackground: "bg-gray-400",
     },
-    {
-        id: 2,
-        content: "Member joined",
-        target: "Bethany Blake",
-        href: "#",
-        date: "Sep 22",
-        datetime: "2020-09-22",
+    member_joined_lobby: {
         icon: UserAddIcon,
         iconBackground: "bg-green-500",
     },
-    {
-        id: 3,
-        content: "Member left",
-        target: "Bethany Blake",
-        href: "#",
-        date: "Sep 28",
-        datetime: "2020-09-28",
+    member_left_lobby: {
         icon: UserRemoveIcon,
         iconBackground: "bg-red-500",
     },
-    {
-        id: 4,
-        content: "Member joined",
-        target: "Ketherine Snyder",
-        href: "#",
-        date: "Sep 30",
-        datetime: "2020-09-30",
-        icon: UserAddIcon,
-        iconBackground: "bg-green-500",
-    },
-    {
-        id: 5,
-        content: "Member left",
-        target: "Katherine Snyder",
-        href: "#",
-        date: "Oct 4",
-        datetime: "2020-10-04",
-        icon: UserRemoveIcon,
-        iconBackground: "bg-red-500",
-    },
-];
+};
+
+const generateContent = (type, body) => {
+    let content;
+
+    switch (type) {
+        case "lobby_created":
+            content = `Lobby ${props.lobby.id} created.`;
+            break;
+        case "member_joined_lobby":
+            content = `${body.name} joined the lobby.`;
+            break;
+        case "member_left_lobby":
+            content = `${body.name} left the lobby.`;
+            break;
+        default:
+            throw new Error("Unrecognised event type: " + type);
+    }
+
+    return content;
+};
+
+const timeline = reactive(
+    props.events.map(({ occurred_at, type, body }) => ({
+        content: generateContent(type, body),
+        datetime: occurred_at,
+        ...iconMap[type],
+    }))
+);
+
+onMounted(() => {
+    Echo.private(`lobby.${props.lobby.id}`)
+        .listen(".member_left_lobby", (event) => {
+            timeline.push({
+                content: generateContent("member_left_lobby", event),
+                datetime: event.occurred_at,
+                ...iconMap["member_left_lobby"],
+            });
+        })
+        .listen(".member_joined_lobby", (event) => {
+            timeline.push({
+                content: generateContent("member_joined_lobby", event),
+                datetime: event.occurred_at,
+                ...iconMap["member_joined_lobby"],
+            });
+        });
+});
 </script>
 
 <template>
@@ -69,13 +83,10 @@ const timeline = [
             <div class="px-4 py-5 sm:p-6">
                 <div class="flow-root">
                     <ul role="list" class="-mb-8">
-                        <li
-                            v-for="(event, eventIdx) in timeline"
-                            :key="event.id"
-                        >
+                        <li v-for="(event, index) in timeline" :key="index">
                             <div class="relative pb-8">
                                 <span
-                                    v-if="eventIdx !== timeline.length - 1"
+                                    v-if="index !== timeline.length - 1"
                                     class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
                                     aria-hidden="true"
                                 />
@@ -100,23 +111,15 @@ const timeline = [
                                         <div>
                                             <p class="text-sm text-gray-500">
                                                 {{ event.content }}
-                                                <a
-                                                    :href="event.href"
-                                                    class="font-medium text-gray-900"
-                                                    >{{ event.target }}</a
-                                                >
                                             </p>
                                         </div>
                                         <div
                                             class="text-right text-sm whitespace-nowrap text-gray-500"
                                         >
                                             <time :datetime="event.datetime">{{
-                                                moment()
-                                                    .subtract(
-                                                        8 - event.id,
-                                                        "minutes"
-                                                    )
-                                                    .fromNow()
+                                                moment(event.datetime).format(
+                                                    "lll"
+                                                )
                                             }}</time>
                                         </div>
                                     </div>

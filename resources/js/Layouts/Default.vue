@@ -1,8 +1,6 @@
 <script setup>
-import moment from "moment";
-import { ref, reactive, computed, onMounted } from "vue";
+import { ref, computed } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
-import { UserAddIcon, UserRemoveIcon } from "@heroicons/vue/solid";
 import {
     Dialog,
     DialogPanel,
@@ -48,29 +46,7 @@ const sidebarNavigation = computed(() => [
     },
 ]);
 
-onMounted(() => {
-    Echo.private(`lobby.${lobbyId.value}`)
-        .listen(".member_left_lobby", ({ name, occurred_at }) => {
-            timeline.push({
-                content: `${name} left the lobby.`,
-                datetime: occurred_at,
-                icon: UserRemoveIcon,
-                iconBackground: "bg-red-500",
-            });
-        })
-        .listen(".member_joined_lobby", ({ name, occurred_at }) => {
-            timeline.push({
-                content: `${name} joined the lobby.`,
-                datetime: occurred_at,
-                icon: UserAddIcon,
-                iconBackground: "bg-green-500",
-            });
-        });
-});
-
 const mobileMenuOpen = ref(false);
-
-const timeline = reactive([]);
 </script>
 
 <template>
@@ -285,72 +261,7 @@ const timeline = reactive([]);
                 <!-- Secondary column (hidden on smaller screens) -->
                 <aside
                     class="hidden w-96 bg-white border-l border-gray-200 overflow-y-auto lg:block"
-                >
-                    <div
-                        v-show="timeline.length"
-                        class="bg-white p-6 rounded-lg"
-                    >
-                        <div class="flow-root">
-                            <ul role="list" class="-mb-8">
-                                <li
-                                    v-for="(event, eventIdx) in timeline"
-                                    :key="eventIdx"
-                                >
-                                    <div class="relative pb-8">
-                                        <span
-                                            v-if="
-                                                eventIdx !== timeline.length - 1
-                                            "
-                                            class="absolute top-4 left-4 -ml-px h-full w-0.5 bg-gray-200"
-                                            aria-hidden="true"
-                                        />
-                                        <div class="relative flex space-x-3">
-                                            <div>
-                                                <span
-                                                    :class="[
-                                                        event.iconBackground,
-                                                        'h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white',
-                                                    ]"
-                                                >
-                                                    <component
-                                                        :is="event.icon"
-                                                        class="h-5 w-5 text-white"
-                                                        aria-hidden="true"
-                                                    />
-                                                </span>
-                                            </div>
-                                            <div
-                                                class="min-w-0 flex-1 pt-1.5 flex justify-between space-x-4"
-                                            >
-                                                <div>
-                                                    <p
-                                                        class="text-sm text-gray-500"
-                                                    >
-                                                        {{ event.content }}
-                                                    </p>
-                                                </div>
-                                                <div
-                                                    class="text-right text-sm whitespace-nowrap text-gray-500"
-                                                >
-                                                    <time
-                                                        :datetime="
-                                                            event.datetime
-                                                        "
-                                                        >{{
-                                                            moment(
-                                                                event.datetime
-                                                            ).format("lll")
-                                                        }}</time
-                                                    >
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </aside>
+                ></aside>
             </div>
         </div>
     </div>
