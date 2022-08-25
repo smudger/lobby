@@ -5,6 +5,7 @@ namespace Tests\Feature;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Http\Middleware\Authenticate;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Inertia\Testing\AssertableInertia;
@@ -23,7 +24,7 @@ class ViewLobbyTest extends TestCase
     /** @test */
     public function a_player_can_view_a_lobby_that_has_been_allocated(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $lobbyFactory = new LobbyFactory();
@@ -53,7 +54,7 @@ class ViewLobbyTest extends TestCase
     /** @test */
     public function a_player_cannot_view_a_lobby_that_has_not_been_allocated(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $response = $this->get('/lobbies/AAAA');

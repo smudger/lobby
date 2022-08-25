@@ -6,6 +6,7 @@ use App\Application\CreateLobbyCommand;
 use App\Application\CreateLobbyHandler;
 use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Member;
+use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
@@ -15,7 +16,7 @@ class CreateLobbyHandlerTest extends TestCase
     /** @test */
     public function it_creates_a_lobby(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
 
         $handler = new CreateLobbyHandler($repository);
 
@@ -27,7 +28,7 @@ class CreateLobbyHandlerTest extends TestCase
     /** @test */
     public function it_adds_the_initial_member_to_the_lobby(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
 
         $handler = new CreateLobbyHandler($repository);
 
@@ -45,7 +46,7 @@ class CreateLobbyHandlerTest extends TestCase
     /** @test */
     public function it_saves_the_lobby_with_initial_member_to_the_repository(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
 
         $handler = new CreateLobbyHandler($repository);
 
@@ -62,7 +63,7 @@ class CreateLobbyHandlerTest extends TestCase
     /** @test */
     public function it_throws_an_exception_if_the_member_name_is_empty(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
 
         $command = new CreateLobbyCommand(
             member_name: '',

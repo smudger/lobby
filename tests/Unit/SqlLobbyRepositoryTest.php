@@ -2,8 +2,10 @@
 
 namespace Tests\Unit;
 
+use App\Domain\Events\EventStore;
 use App\Domain\Exceptions\NoMoreLobbiesException;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\SqlLobbyRepository;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
@@ -14,9 +16,23 @@ class SqlLobbyRepositoryTest extends TestCase
 {
     use LobbyRepositoryTest, RefreshDatabase;
 
+    private EventStore $eventStore;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->eventStore = new InMemoryEventStore();
+    }
+
     protected function getRepository(): LobbyRepository
     {
-        return new SqlLobbyRepository();
+        return new SqlLobbyRepository($this->eventStore);
+    }
+
+    protected function getEventStore(): EventStore
+    {
+        return $this->eventStore;
     }
 
     /** @test */

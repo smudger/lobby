@@ -10,6 +10,7 @@ use App\Domain\Models\Lobby;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Auth\HasSession;
 use App\Infrastructure\Auth\UserFactory;
+use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Str;
 use Mockery;
@@ -31,7 +32,7 @@ class CreateMemberControllerTest extends TestCase
     {
         $handler = $this->spy(CreateMemberHandler::class);
 
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $lobby = new Lobby($repository->allocate());
@@ -58,7 +59,7 @@ class CreateMemberControllerTest extends TestCase
             ->andReturn($user);
         $this->app->instance(UserFactory::class, $userFactory);
 
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $lobby = new Lobby($repository->allocate());
@@ -80,7 +81,7 @@ class CreateMemberControllerTest extends TestCase
                 ->andThrow(new LobbyNotAllocatedException());
         });
 
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $response = $this->post('/members', [
@@ -103,7 +104,7 @@ class CreateMemberControllerTest extends TestCase
                 ]));
         });
 
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $response = $this->post('/members', [

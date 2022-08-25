@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence;
 
+use App\Domain\Events\EventStore;
 use App\Domain\Exceptions\LobbyAllocationException;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Exceptions\NoMoreLobbiesException;
@@ -16,6 +17,11 @@ use stdClass;
 
 class SqlLobbyRepository implements LobbyRepository
 {
+    public function __construct(
+        private readonly EventStore $eventStore,
+    ) {
+    }
+
     public function findById(LobbyId $id): Lobby
     {
         /** @var ?stdClass $row */
@@ -80,6 +86,9 @@ class SqlLobbyRepository implements LobbyRepository
         DB::table('lobbies')
             ->where('id', $lobby->id->__toString())
             ->update(['members' => $lobby->members()]);
+
+        $this->eventStore->addAll($lobby->events());
+        $lobby->flushEvents();
     }
 
     private function checkLobbyIdIsAllocated(LobbyId $id): void

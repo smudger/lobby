@@ -2,9 +2,7 @@
 
 namespace App\Domain\Models;
 
-use Stringable;
-
-class LobbyId implements Stringable
+class LobbyId implements AggregateId
 {
     public function __construct(
         public readonly string $id,
@@ -25,7 +23,7 @@ class LobbyId implements Stringable
         return $this->id === $other->id;
     }
 
-    public function __toString()
+    public function __toString(): string
     {
         return $this->id;
     }

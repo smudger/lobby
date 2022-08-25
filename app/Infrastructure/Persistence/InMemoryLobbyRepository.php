@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Persistence;
 
+use App\Domain\Events\EventStore;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Exceptions\NoMoreLobbiesException;
 use App\Domain\Models\Lobby;
@@ -15,6 +16,7 @@ class InMemoryLobbyRepository implements LobbyRepository
     private Faker $faker;
 
     public function __construct(
+        private readonly EventStore $eventStore,
         /** @var Lobby[] */
         private array $lobbies = [],
     ) {
@@ -54,6 +56,9 @@ class InMemoryLobbyRepository implements LobbyRepository
         $this->checkLobbyIdIsAllocated($lobby->id);
 
         $this->lobbies[$lobby->id->__toString()] = $lobby;
+
+        $this->eventStore->addAll($lobby->events());
+        $lobby->flushEvents();
     }
 
     private function checkLobbyIdIsAllocated(LobbyId $id): void

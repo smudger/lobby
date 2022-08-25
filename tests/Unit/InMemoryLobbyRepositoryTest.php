@@ -2,10 +2,12 @@
 
 namespace Tests\Unit;
 
+use App\Domain\Events\EventStore;
 use App\Domain\Exceptions\NoMoreLobbiesException;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\LobbyId;
 use App\Domain\Repositories\LobbyRepository;
+use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
@@ -14,9 +16,23 @@ class InMemoryLobbyRepositoryTest extends TestCase
 {
     use LobbyRepositoryTest;
 
+    private EventStore $eventStore;
+
+    public function setUp(): void
+    {
+        parent::setUp();
+
+        $this->eventStore = new InMemoryEventStore();
+    }
+
     protected function getRepository(): LobbyRepository
     {
-        return new InMemoryLobbyRepository();
+        return new InMemoryLobbyRepository(eventStore: $this->eventStore);
+    }
+
+    protected function getEventStore(): EventStore
+    {
+        return $this->eventStore;
     }
 
     /** @test */
@@ -29,7 +45,7 @@ class InMemoryLobbyRepositoryTest extends TestCase
             ])
             ->toArray();
 
-        $repository = new InMemoryLobbyRepository($fullLobbiesArray);
+        $repository = new InMemoryLobbyRepository(eventStore: new InMemoryEventStore(), lobbies: $fullLobbiesArray);
 
         try {
             $repository->allocate();

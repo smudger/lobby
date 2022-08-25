@@ -2,6 +2,7 @@
 
 namespace Tests\Unit;
 
+use App\Domain\Events\EventStore;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\LobbyId;
@@ -12,6 +13,8 @@ use PHPUnit\Framework\Assert;
 trait LobbyRepositoryTest
 {
     abstract protected function getRepository(): LobbyRepository;
+
+    abstract protected function getEventStore(): EventStore;
 
     abstract public function it_throws_an_exception_if_there_are_no_more_lobbies_available(): void;
 
@@ -72,6 +75,25 @@ trait LobbyRepositoryTest
 
         Assert::assertCount(1, $updatedLobby->members());
         Assert::assertTrue($updatedLobby->members()[0]->equals($member));
+    }
+
+    /** @test */
+    public function it_saves_the_events_on_the_lobby(): void
+    {
+        $repository = $this->getRepository();
+
+        $lobby = new Lobby($repository->allocate());
+
+        $member = new Member(
+            name: 'Ayesha Nicole',
+        );
+        $lobby->addMember($member);
+        $lobby->removeMember($member);
+
+        $repository->save($lobby);
+
+        Assert::assertCount(0, $lobby->events());
+        Assert::assertNotEmpty($this->getEventStore()->findAllByAggregateId($lobby->id));
     }
 
     /** @test */

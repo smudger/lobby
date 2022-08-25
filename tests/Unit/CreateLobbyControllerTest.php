@@ -9,6 +9,7 @@ use App\Domain\Models\LobbyId;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Auth\HasSession;
 use App\Infrastructure\Auth\UserFactory;
+use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Str;
 use Mockery;
@@ -34,7 +35,7 @@ class CreateLobbyControllerTest extends TestCase
     {
         $handler = $this->spy(CreateLobbyHandler::class);
 
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $this->post('/lobbies', [
@@ -58,7 +59,7 @@ class CreateLobbyControllerTest extends TestCase
             ->andReturn($user);
         $this->app->instance(UserFactory::class, $userFactory);
 
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $this->post('/lobbies', [
@@ -113,7 +114,7 @@ class CreateLobbyControllerTest extends TestCase
                 ]));
         });
 
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $this->app->instance(LobbyRepository::class, $repository);
 
         $response = $this->post('/lobbies', [

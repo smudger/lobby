@@ -4,12 +4,16 @@ namespace Tests\Unit;
 
 use App\Application\DestroyMemberCommand;
 use App\Application\DestroyMemberHandler;
+use App\Domain\Events\StoredEvent;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Exceptions\MemberNotFoundException;
 use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\Member;
+use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
@@ -18,7 +22,7 @@ class DestroyMemberHandlerTest extends TestCase
     /** @test */
     public function it_removes_a_member_from_a_lobby(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $lobby = new Lobby($repository->allocate());
 
         $ayesha = new Member('Ayesha Nicole');
@@ -45,9 +49,41 @@ class DestroyMemberHandlerTest extends TestCase
     }
 
     /** @test */
+    public function it_records_the_event_to_the_event_store(): void
+    {
+        Carbon::setTestNow(now());
+        $eventStore = new InMemoryEventStore();
+        $repository = new InMemoryLobbyRepository(eventStore: $eventStore);
+        $lobby = new Lobby($repository->allocate());
+
+        $ayesha = new Member('Ayesha Nicole');
+        $lobby->addMember($ayesha);
+        $repository->save($lobby);
+
+        $command = new DestroyMemberCommand(
+            lobby_id: $lobby->id->__toString(),
+            name: 'Ayesha Nicole',
+        );
+
+        $handler = new DestroyMemberHandler($repository);
+
+        $handler->execute($command);
+
+        $events = $eventStore->findAllByAggregateId($lobby->id);
+
+        /** @var StoredEvent $event */
+        $event = Arr::last($events);
+        Assert::assertTrue(now()->equalTo($event->occurredAt));
+        Assert::assertEquals('member_left_lobby', $event->type);
+        Assert::assertEquals([
+            'name' => 'Ayesha Nicole',
+        ], $event->body);
+    }
+
+    /** @test */
     public function it_throws_an_exception_if_the_lobby_has_not_been_allocated(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
 
         $command = new DestroyMemberCommand(
             lobby_id: 'AAAA',
@@ -68,7 +104,7 @@ class DestroyMemberHandlerTest extends TestCase
     /** @test */
     public function it_throws_an_exception_if_the_name_is_empty(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $lobby = new Lobby($repository->allocate());
 
         $command = new DestroyMemberCommand(
@@ -93,7 +129,7 @@ class DestroyMemberHandlerTest extends TestCase
     /** @test */
     public function it_throws_an_exception_if_the_member_could_not_be_found(): void
     {
-        $repository = new InMemoryLobbyRepository();
+        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $lobby = new Lobby($repository->allocate());
 
         $command = new DestroyMemberCommand(
