@@ -2,23 +2,21 @@
 
 namespace App\Domain\Events;
 
-use Illuminate\Broadcasting\Channel;
-use Illuminate\Broadcasting\PrivateChannel;
-use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
+use App\Domain\Models\AggregateId;
 
-class MemberJoinedLobby implements ShouldBroadcast
+class MemberJoinedLobby extends DomainEvent
 {
-    public function __construct(private readonly string $lobbyId)
-    {
+    public function __construct(
+        AggregateId $aggregateId,
+        private readonly string $name,
+    ) {
+        parent::__construct($aggregateId);
     }
 
-    public function broadcastAs(): string
+    public function body(): array
     {
-        return 'lobby.members.joined';
-    }
-
-    public function broadcastOn(): Channel
-    {
-        return new PrivateChannel('lobby.'.$this->lobbyId);
+        return [
+            'name' => $this->name,
+        ];
     }
 }

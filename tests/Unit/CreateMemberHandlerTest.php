@@ -4,13 +4,15 @@ namespace Tests\Unit;
 
 use App\Application\CreateMemberCommand;
 use App\Application\CreateMemberHandler;
-use App\Domain\Events\MemberJoinedLobby;
+use App\Domain\Events\StoredEvent;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\Member;
 use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use PHPUnit\Framework\Assert;
 use Tests\TestCase;
@@ -50,7 +52,10 @@ class CreateMemberHandlerTest extends TestCase
     /** @test */
     public function it_dispatches_an_event(): void
     {
-        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
+        Carbon::setTestNow(now());
+
+        $eventStore = new InMemoryEventStore();
+        $repository = new InMemoryLobbyRepository($eventStore);
         $lobby = new Lobby($repository->allocate());
 
         $command = new CreateMemberCommand(
@@ -62,7 +67,15 @@ class CreateMemberHandlerTest extends TestCase
 
         $handler->execute($command);
 
-        Event::assertDispatched(MemberJoinedLobby::class);
+        $events = $eventStore->findAllByAggregateId($lobby->id);
+
+        /** @var StoredEvent $event */
+        $event = Arr::last($events);
+        Assert::assertTrue(now()->equalTo($event->occurredAt));
+        Assert::assertEquals('member_joined_lobby', $event->type);
+        Assert::assertEquals([
+            'name' => 'Ayesha Nicole',
+        ], $event->body);
     }
 
     /** @test */

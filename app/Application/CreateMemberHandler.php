@@ -2,13 +2,11 @@
 
 namespace App\Application;
 
-use App\Domain\Events\MemberJoinedLobby;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\LobbyId;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
-use Illuminate\Support\Facades\Event;
 
 class CreateMemberHandler
 {
@@ -45,7 +43,5 @@ class CreateMemberHandler
         $lobby->addMember($member);
 
         $this->repository->save($lobby);
-
-        Event::dispatch(new MemberJoinedLobby($lobby->id->__toString()));
     }
 }

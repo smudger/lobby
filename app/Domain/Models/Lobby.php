@@ -2,6 +2,7 @@
 
 namespace App\Domain\Models;
 
+use App\Domain\Events\MemberJoinedLobby;
 use App\Domain\Events\MemberLeftLobby;
 use App\Domain\Exceptions\MemberNotFoundException;
 
@@ -33,6 +34,8 @@ class Lobby extends Aggregate
     public function addMember(Member $member): void
     {
         $this->members[$member->name] = $member;
+
+        $this->recordEvent(new MemberJoinedLobby($this->id, $member->name));
     }
 
     public function removeMember(Member $member): void
