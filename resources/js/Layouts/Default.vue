@@ -1,7 +1,8 @@
 <script setup>
+import moment from "moment";
 import { ref, reactive, computed, onMounted } from "vue";
 import { usePage } from "@inertiajs/inertia-vue3";
-import { UserIcon } from "@heroicons/vue/solid";
+import { UserAddIcon, UserRemoveIcon } from "@heroicons/vue/solid";
 import {
     Dialog,
     DialogPanel,
@@ -48,21 +49,23 @@ const sidebarNavigation = computed(() => [
 ]);
 
 onMounted(() => {
-    Echo.private(`lobby.${lobbyId.value}`).listen(
-        ".member_left_lobby",
-        ({ name }) => {
+    Echo.private(`lobby.${lobbyId.value}`)
+        .listen(".member_left_lobby", ({ name, occurred_at }) => {
             timeline.push({
-                id: 1,
-                content: `${name} left lobby`,
-                target: `${lobbyId.value}`,
-                href: `/lobbies/${lobbyId.value}`,
-                date: "Sep 20",
-                datetime: "2020-09-20",
-                icon: UserIcon,
-                iconBackground: "bg-gray-400",
+                content: `${name} left the lobby.`,
+                datetime: occurred_at,
+                icon: UserRemoveIcon,
+                iconBackground: "bg-red-500",
             });
-        }
-    );
+        })
+        .listen(".member_joined_lobby", ({ name, occurred_at }) => {
+            timeline.push({
+                content: `${name} joined the lobby.`,
+                datetime: occurred_at,
+                icon: UserAddIcon,
+                iconBackground: "bg-green-500",
+            });
+        });
 });
 
 const mobileMenuOpen = ref(false);
@@ -291,7 +294,7 @@ const timeline = reactive([]);
                             <ul role="list" class="-mb-8">
                                 <li
                                     v-for="(event, eventIdx) in timeline"
-                                    :key="event.id"
+                                    :key="eventIdx"
                                 >
                                     <div class="relative pb-8">
                                         <span
@@ -324,13 +327,6 @@ const timeline = reactive([]);
                                                         class="text-sm text-gray-500"
                                                     >
                                                         {{ event.content }}
-                                                        <a
-                                                            :href="event.href"
-                                                            class="font-medium text-gray-900"
-                                                            >{{
-                                                                event.target
-                                                            }}</a
-                                                        >
                                                     </p>
                                                 </div>
                                                 <div
@@ -340,7 +336,11 @@ const timeline = reactive([]);
                                                         :datetime="
                                                             event.datetime
                                                         "
-                                                        >{{ event.date }}</time
+                                                        >{{
+                                                            moment(
+                                                                event.datetime
+                                                            ).format("lll")
+                                                        }}</time
                                                     >
                                                 </div>
                                             </div>

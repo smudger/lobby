@@ -8,6 +8,7 @@ use App\Domain\Models\LobbyId;
 use App\Infrastructure\Broadcasts\DomainBroadcast;
 use App\Infrastructure\Events\BroadcastEventStore;
 use App\Infrastructure\Events\InMemoryEventStore;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Event;
 use Tests\TestCase;
 
@@ -24,6 +25,7 @@ class BroadcastEventStoreTest extends TestCase
     public function it_broadcasts_all_the_events_that_are_added(): void
     {
         Event::fake();
+        Carbon::setTestNow(now());
 
         $first = new MemberLeftLobby(LobbyId::fromString('AAAA'), 'Ayesha Nicole');
         $second = new MemberLeftLobby(LobbyId::fromString('BBBB'), 'Kim Petras');
@@ -32,12 +34,18 @@ class BroadcastEventStoreTest extends TestCase
 
         Event::assertDispatched(DomainBroadcast::class, function (DomainBroadcast $broadcast) use ($first) {
             return $broadcast->broadcastOn()->name === 'private-lobby.AAAA'
-                && $broadcast->broadcastWith() === $first->body()
+                && $broadcast->broadcastWith() === array_merge([
+                    'occurred_at' => Carbon::now()->toIso8601ZuluString(),
+                ],
+                    $first->body())
                 && $broadcast->broadcastAs() === 'member_left_lobby';
         });
         Event::assertDispatched(DomainBroadcast::class, function (DomainBroadcast $broadcast) use ($second) {
             return $broadcast->broadcastOn()->name === 'private-lobby.BBBB'
-                && $broadcast->broadcastWith() === $second->body()
+                && $broadcast->broadcastWith() === array_merge([
+                    'occurred_at' => Carbon::now()->toIso8601ZuluString(),
+                ],
+                    $second->body())
                 && $broadcast->broadcastAs() === 'member_left_lobby';
         });
     }
