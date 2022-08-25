@@ -4,10 +4,13 @@ namespace Tests\Unit;
 
 use App\Application\CreateLobbyCommand;
 use App\Application\CreateLobbyHandler;
+use App\Domain\Events\StoredEvent;
 use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Member;
 use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Assert;
 use PHPUnit\Framework\TestCase;
 
@@ -23,6 +26,37 @@ class CreateLobbyHandlerTest extends TestCase
         $lobby = $handler->execute(new CreateLobbyCommand(member_name: 'Ayesha Nicole'));
 
         Assert::assertTrue($lobby->equals($repository->findById($lobby->id)));
+    }
+
+    /** @test */
+    public function it_records_events(): void
+    {
+        Carbon::setTestNow(now());
+
+        $eventStore = new InMemoryEventStore();
+        $repository = new InMemoryLobbyRepository($eventStore);
+
+        $handler = new CreateLobbyHandler($repository);
+
+        $lobby = $handler->execute(new CreateLobbyCommand(member_name: 'Ayesha Nicole'));
+
+        $events = $eventStore->findAllByAggregateId($lobby->id);
+
+        Assert::assertCount(2, $events);
+
+        /** @var StoredEvent $creationEvent */
+        $creationEvent = Arr::first($events);
+        Assert::assertTrue(now()->equalTo($creationEvent->occurredAt));
+        Assert::assertEquals('lobby_created', $creationEvent->type);
+        Assert::assertEquals([], $creationEvent->body);
+
+        /** @var StoredEvent $memberEvent */
+        $memberEvent = Arr::last($events);
+        Assert::assertTrue(now()->equalTo($memberEvent->occurredAt));
+        Assert::assertEquals('member_joined_lobby', $memberEvent->type);
+        Assert::assertEquals([
+            'name' => 'Ayesha Nicole',
+        ], $memberEvent->body);
     }
 
     /** @test */

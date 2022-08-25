@@ -2,6 +2,7 @@
 
 namespace App\Domain\Models;
 
+use App\Domain\Events\LobbyCreated;
 use App\Domain\Events\MemberJoinedLobby;
 use App\Domain\Events\MemberLeftLobby;
 use App\Domain\Exceptions\MemberNotFoundException;
@@ -23,6 +24,15 @@ class Lobby extends Aggregate
             ->toArray();
 
         $this->members = $membersWithKeys;
+    }
+
+    public static function create(LobbyId $lobbyId): Lobby
+    {
+        $lobby = new self($lobbyId);
+
+        $lobby->recordEvent(new LobbyCreated($lobby->id));
+
+        return $lobby;
     }
 
     /** @return Member[] */

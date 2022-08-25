@@ -25,7 +25,7 @@ class CreateLobbyHandler
 
         $lobbyId = $this->repository->allocate();
 
-        $lobby = new Lobby($lobbyId);
+        $lobby = Lobby::create($lobbyId);
 
         $member = new Member(name: $command->member_name);
         $lobby->addMember($member);
