@@ -20,8 +20,8 @@ deptrac:
           must_not:
             - type: directory
               value: app/.*
-            - type: className
-              value: .*Illuminate.*
+            - type: classLike
+              value: Carbon
             - type: classLike
               value: Exception
             - type: classLike
