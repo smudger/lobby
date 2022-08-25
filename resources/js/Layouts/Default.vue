@@ -49,11 +49,11 @@ const sidebarNavigation = computed(() => [
 
 onMounted(() => {
     Echo.private(`lobby.${lobbyId.value}`).listen(
-        ".lobby.members.joined",
-        () => {
+        ".member_left_lobby",
+        ({ name }) => {
             timeline.push({
                 id: 1,
-                content: "Member joined lobby",
+                content: `${name} left lobby`,
                 target: `${lobbyId.value}`,
                 href: `/lobbies/${lobbyId.value}`,
                 date: "Sep 20",
