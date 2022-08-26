@@ -19,8 +19,9 @@ Route::middleware(['guest'])->group(function () {
 Route::middleware(['auth'])->group(function () {
     Route::get('/lobbies/{id}', [LobbyController::class, 'show'])->name('lobby.show');
     Route::get('/lobbies/{id}/members', [MemberController::class, 'index'])->name('members.index');
+    Route::delete('/lobbies/{id}/members/{memberId}', [MemberController::class, 'destroy'])->name('members.destroy');
     Route::get('/lobbies/{id}/games', [GameController::class, 'index'])->name('games.index');
     Route::get('/lobbies/{id}/feed', [FeedController::class, 'index'])->name('feed.index');
 
-    Route::delete('/members/me', [MemberController::class, 'destroy'])->name('members.destroy');
+    Route::delete('/members/me', [MemberController::class, 'destroyMe'])->name('members.destroyMe');
 });

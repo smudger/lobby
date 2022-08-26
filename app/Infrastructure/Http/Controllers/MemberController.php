@@ -57,6 +57,21 @@ class MemberController extends Controller
     }
 
     public function destroy(
+        string $id,
+        int $memberId,
+        DestroyMemberHandler $handler,
+    ): RedirectResponse {
+        $command = new DestroyMemberCommand(
+            lobby_id: $id,
+            member_id: $memberId,
+        );
+
+        $handler->execute($command);
+
+        return redirect()->route('members.index', ['id' => $id]);
+    }
+
+    public function destroyMe(
         Request $request,
         DestroyMemberHandler $handler,
     ): RedirectResponse {
