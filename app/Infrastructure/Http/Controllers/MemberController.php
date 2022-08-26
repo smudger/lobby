@@ -29,14 +29,23 @@ class MemberController extends Controller
             abort(404);
         }
 
-        return Inertia::render('Member/Index', ['lobby' => [
-            'id' => $lobby->id->__toString(),
-            'members' => collect($lobby->members())
-                ->map(fn (Member $member) => [
-                    'name' => $member->name,
-                ])
-                ->toArray(),
-        ]]);
+        /** @var \stdClass $me */
+        $me = Auth::user();
+
+        return Inertia::render('Member/Index', [
+            'lobby' => [
+                'id' => $lobby->id->__toString(),
+                'members' => collect($lobby->members())
+                    ->map(fn (Member $member) => [
+                        'name' => $member->name,
+                        'id' => $member->id,
+                    ])
+                    ->toArray(),
+            ],
+            'me' => [
+                'member_id' => $me->member_id,
+            ],
+        ]);
     }
 
     public function create(Request $request): Response

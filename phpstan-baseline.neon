@@ -16,6 +16,11 @@ parameters:
 			path: app/Infrastructure/Auth/User.php
 
 		-
+			message: "#^Property App\\\\Infrastructure\\\\Auth\\\\User\\:\\:\\$casts type has no value type specified in iterable type array\\.$#"
+			count: 1
+			path: app/Infrastructure/Auth/User.php
+
+		-
 			message: "#^Parameter \\#1 \\$callback of method Illuminate\\\\Support\\\\Collection\\<\\(int\\|string\\),mixed\\>\\:\\:map\\(\\) expects callable\\(mixed, \\(int\\|string\\)\\)\\: App\\\\Domain\\\\Events\\\\StoredEvent, Closure\\(stdClass\\)\\: App\\\\Domain\\\\Events\\\\StoredEvent given\\.$#"
 			count: 1
 			path: app/Infrastructure/Events/SqlEventStore.php

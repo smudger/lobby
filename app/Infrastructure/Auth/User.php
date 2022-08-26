@@ -23,6 +23,10 @@ class User extends Model implements AuthenticatableContract, UserFactory, HasSes
         'remember_token',
     ];
 
+    protected $casts = [
+        'member_id' => 'integer',
+    ];
+
     public function createFromLobbyMember(Lobby $lobby, Member $member): self
     {
         return $this->createFromRaw([
