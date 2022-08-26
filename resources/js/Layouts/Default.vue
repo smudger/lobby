@@ -257,11 +257,6 @@ const mobileMenuOpen = ref(false);
                         <slot></slot>
                     </section>
                 </main>
-
-                <!-- Secondary column (hidden on smaller screens) -->
-                <aside
-                    class="hidden w-96 bg-white border-l border-gray-200 overflow-y-auto lg:block"
-                ></aside>
             </div>
         </div>
     </div>
