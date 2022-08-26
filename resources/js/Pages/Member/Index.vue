@@ -1,9 +1,22 @@
 <script setup>
 import moment from "moment";
+import { onMounted, ref } from "vue";
 
-defineProps({
+const props = defineProps({
     lobby: Object,
     me: Object,
+});
+
+const members = ref(props.lobby.members);
+
+onMounted(() => {
+    Echo.private(`lobby.${props.lobby.id}`)
+        .listen(".member_left_lobby", ({ id }) => {
+            members.value = members.value.filter((member) => member.id !== id);
+        })
+        .listen(".member_joined_lobby", (member) => {
+            members.value = members.value.concat([member]);
+        });
 });
 </script>
 
@@ -20,7 +33,7 @@ defineProps({
         <div class="bg-white shadow overflow-hidden rounded-md">
             <ul role="list" class="divide-y divide-gray-200">
                 <li
-                    v-for="(member, index) in lobby.members"
+                    v-for="(member, index) in members"
                     :key="index"
                     class="py-4 px-3 flex justify-between items-center"
                 >
