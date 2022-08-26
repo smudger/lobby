@@ -8,6 +8,7 @@ use App\Domain\Events\MemberLeftLobby;
 use App\Domain\Exceptions\MemberNotFoundException;
 use App\Domain\Exceptions\ValidationException;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Carbon;
 
 class Lobby extends Aggregate
 {
@@ -72,7 +73,7 @@ class Lobby extends Aggregate
             ? 1
             : Arr::last($this->members)->id + 1;
 
-        $member = new Member(id: $id, name: $name);
+        $member = new Member(id: $id, name: $name, joinedAt: Carbon::now());
 
         $this->members[] = $member;
 

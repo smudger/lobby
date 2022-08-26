@@ -12,6 +12,7 @@ use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
 use Illuminate\Database\Query\Builder;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use stdClass;
 
@@ -38,8 +39,11 @@ class SqlLobbyRepository implements LobbyRepository
 
         /** @var Member[] $members */
         $members = collect($rawMembers)
-            /** @phpstan-ignore-next-line  */
-            ->map(fn (array $raw) => new Member(...$raw))
+            ->map(fn (array $raw) => new Member(
+                id: $raw['id'],
+                name: $raw['name'],
+                joinedAt: Carbon::parse($raw['joinedAt']),
+            ))
             ->toArray();
 
         return new Lobby(

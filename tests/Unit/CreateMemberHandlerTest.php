@@ -28,6 +28,7 @@ class CreateMemberHandlerTest extends TestCase
     /** @test */
     public function it_adds_a_new_member_to_the_lobby(): void
     {
+        Carbon::setTestNow(now());
         $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $lobby = new Lobby($repository->allocate());
 
@@ -47,6 +48,7 @@ class CreateMemberHandlerTest extends TestCase
 
         Assert::assertEquals('Ayesha Nicole', $member->name);
         Assert::assertEquals(1, $member->id);
+        Assert::assertTrue(now()->equalTo($member->joinedAt));
     }
 
     /** @test */
@@ -76,6 +78,7 @@ class CreateMemberHandlerTest extends TestCase
         Assert::assertEquals([
             'name' => 'Ayesha Nicole',
             'id' => 1,
+            'joined_at' => now()->toIso8601ZuluString(),
         ], $event->body);
     }
 

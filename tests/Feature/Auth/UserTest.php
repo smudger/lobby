@@ -10,6 +10,7 @@ use App\Infrastructure\Auth\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Session\ArraySessionHandler;
 use Illuminate\Session\Store;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use PHPUnit\Framework\Assert;
 use Tests\TestCase;
@@ -82,7 +83,7 @@ class UserTest extends TestCase
     {
         $lobbyId = $this->getLobbyRepository()->allocate();
         $lobby = new Lobby($lobbyId);
-        $member = new Member(id: 1, name: 'Ayesha Nicole');
+        $member = new Member(id: 1, name: 'Ayesha Nicole', joinedAt: Carbon::now());
 
         /** @var User $user */
         $user = $this->getFactory()->createFromLobbyMember($lobby, $member);

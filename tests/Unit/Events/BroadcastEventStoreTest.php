@@ -28,8 +28,14 @@ class BroadcastEventStoreTest extends TestCase
         Event::fake();
         Carbon::setTestNow(now());
 
-        $first = new MemberLeftLobby(LobbyId::fromString('AAAA'), new Member(id: 1, name: 'Ayesha Nicole'));
-        $second = new MemberLeftLobby(LobbyId::fromString('BBBB'), new Member(id: 1, name: 'Kim Petras'));
+        $first = new MemberLeftLobby(
+            LobbyId::fromString('AAAA'),
+            new Member(id: 1, name: 'Ayesha Nicole', joinedAt: Carbon::now()),
+        );
+        $second = new MemberLeftLobby(
+            LobbyId::fromString('BBBB'),
+            new Member(id: 1, name: 'Kim Petras', joinedAt: Carbon::now()),
+        );
 
         $this->getEventStore()->addAll([$first, $second]);
 

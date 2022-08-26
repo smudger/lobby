@@ -39,6 +39,7 @@ class MemberController extends Controller
                     ->map(fn (Member $member) => [
                         'name' => $member->name,
                         'id' => $member->id,
+                        'joined_at' => $member->joinedAt->toIso8601ZuluString(),
                     ])
                     ->toArray(),
             ],

@@ -30,7 +30,7 @@ defineProps({
                         </p>
                         <p class="text-sm text-gray-500 truncate">
                             Joined
-                            {{ moment().subtract(index, "minutes").fromNow() }}.
+                            {{ moment(member.joined_at).fromNow() }}.
                         </p>
                     </div>
                     <div>

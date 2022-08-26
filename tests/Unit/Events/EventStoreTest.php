@@ -20,9 +20,18 @@ trait EventStoreTest
         Carbon::setTestNow(now()->micros(0));
 
         $events = [
-            new MemberLeftLobby(LobbyId::fromString('AAAA'), new Member(id: 1, name: 'Ayesha Nicole')),
-            new MemberLeftLobby(LobbyId::fromString('AAAA'), new Member(id: 2, name: 'Kim Petras')),
-            new MemberLeftLobby(LobbyId::fromString('BBBB'), new Member(id: 1, name: 'Slayyyter')),
+            new MemberLeftLobby(
+                LobbyId::fromString('AAAA'),
+                new Member(id: 1, name: 'Ayesha Nicole', joinedAt: Carbon::now()),
+            ),
+            new MemberLeftLobby(
+                LobbyId::fromString('AAAA'),
+                new Member(id: 2, name: 'Kim Petras', joinedAt: Carbon::now()),
+            ),
+            new MemberLeftLobby(
+                LobbyId::fromString('BBBB'),
+                new Member(id: 1, name: 'Slayyyter', joinedAt: Carbon::now()),
+            ),
         ];
 
         $eventStore = $this->getEventStore();

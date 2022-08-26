@@ -19,6 +19,7 @@ class MemberJoinedLobby extends DomainEvent
         return [
             'id' => $this->member->id,
             'name' => $this->member->name,
+            'joined_at' => $this->member->joinedAt->toIso8601ZuluString(),
         ];
     }
 }

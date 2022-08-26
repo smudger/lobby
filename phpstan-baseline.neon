@@ -76,6 +76,21 @@ parameters:
 			path: app/Infrastructure/Http/Routes/web.php
 
 		-
+			message: "#^Parameter \\#1 \\$time of static method Carbon\\\\Carbon\\:\\:parse\\(\\) expects DateTimeInterface\\|string\\|null, mixed given\\.$#"
+			count: 1
+			path: app/Infrastructure/Persistence/SqlLobbyRepository.php
+
+		-
+			message: "#^Parameter \\$id of class App\\\\Domain\\\\Models\\\\Member constructor expects int, mixed given\\.$#"
+			count: 1
+			path: app/Infrastructure/Persistence/SqlLobbyRepository.php
+
+		-
+			message: "#^Parameter \\$name of class App\\\\Domain\\\\Models\\\\Member constructor expects string, mixed given\\.$#"
+			count: 1
+			path: app/Infrastructure/Persistence/SqlLobbyRepository.php
+
+		-
 			message: "#^Cannot access property \\$id on mixed\\.$#"
 			count: 1
 			path: app/Infrastructure/Providers/RouteServiceProvider.php

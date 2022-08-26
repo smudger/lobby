@@ -8,6 +8,7 @@ use App\Domain\Models\Lobby;
 use App\Domain\Models\LobbyId;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
+use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Assert;
 
 trait LobbyRepositoryTest
@@ -59,6 +60,8 @@ trait LobbyRepositoryTest
     /** @test */
     public function it_saves_an_updated_lobby(): void
     {
+        Carbon::setTestNow(now());
+
         $repository = $this->getRepository();
 
         $lobby = new Lobby($repository->allocate());
@@ -70,7 +73,7 @@ trait LobbyRepositoryTest
         $updatedLobby = $repository->findById($lobby->id);
 
         Assert::assertCount(1, $updatedLobby->members());
-        Assert::assertTrue($updatedLobby->members()[0]->equals(new Member(id: 1, name: 'Ayesha Nicole')));
+        Assert::assertTrue($updatedLobby->members()[0]->equals(new Member(id: 1, name: 'Ayesha Nicole', joinedAt: Carbon::now())));
     }
 
     /** @test */
