@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Auth;
 
-use App\Application\Auth\UserRepository;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\Member;
 use Illuminate\Auth\Authenticatable;

@@ -2,11 +2,11 @@
 
 namespace App\Infrastructure\Providers;
 
-use App\Application\Auth\UserRepository;
 use App\Domain\Events\EventStore;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Auth\User;
 use App\Infrastructure\Auth\UserFactory;
+use App\Infrastructure\Auth\UserRepository;
 use App\Infrastructure\Events\BroadcastEventStore;
 use App\Infrastructure\Events\SqlEventStore;
 use App\Infrastructure\Persistence\SqlLobbyRepository;

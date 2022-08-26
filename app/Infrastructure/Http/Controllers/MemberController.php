@@ -2,7 +2,6 @@
 
 namespace App\Infrastructure\Http\Controllers;
 
-use App\Application\Auth\UserRepository;
 use App\Application\CreateMemberCommand;
 use App\Application\CreateMemberHandler;
 use App\Application\DestroyMemberCommand;
@@ -13,6 +12,7 @@ use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Auth\HasSession;
 use App\Infrastructure\Auth\UserFactory;
+use App\Infrastructure\Auth\UserRepository;
 use App\Infrastructure\Http\Requests\CreateMemberRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
