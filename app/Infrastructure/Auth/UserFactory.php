@@ -9,6 +9,6 @@ interface UserFactory
 {
     public function createFromLobbyMember(Lobby $lobby, Member $member): HasSession;
 
-    /** @param  string[]  $parameters */
+    /** @param  array<string|int>  $parameters */
     public function createFromRaw(array $parameters): HasSession;
 }

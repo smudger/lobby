@@ -23,6 +23,8 @@ deptrac:
             - type: classLike
               value: Carbon
             - type: classLike
+              value: Arr
+            - type: classLike
               value: Exception
             - type: classLike
               value: Stringable

@@ -55,6 +55,7 @@ class CreateLobbyHandlerTest extends TestCase
         Assert::assertTrue(now()->equalTo($memberEvent->occurredAt));
         Assert::assertEquals('member_joined_lobby', $memberEvent->type);
         Assert::assertEquals([
+            'id' => 1,
             'name' => 'Ayesha Nicole',
         ], $memberEvent->body);
     }
@@ -74,7 +75,7 @@ class CreateLobbyHandlerTest extends TestCase
         Assert::assertTrue($lobby->equals($repository->findById($lobby->id)));
 
         Assert::assertCount(1, $lobby->members());
-        Assert::assertTrue($lobby->members()[0]->equals(new Member('Ayesha Nicole')));
+        Assert::assertTrue($lobby->members()[0]->equals(new Member(id: 1, name: 'Ayesha Nicole')));
     }
 
     /** @test */
@@ -91,7 +92,7 @@ class CreateLobbyHandlerTest extends TestCase
 
         $savedLobby = $repository->findById($lobby->id);
         Assert::assertCount(1, $savedLobby->members());
-        Assert::assertTrue($savedLobby->members()[0]->equals(new Member('Ayesha Nicole')));
+        Assert::assertTrue($savedLobby->members()[0]->equals(new Member(id: 1, name: 'Ayesha Nicole')));
     }
 
     /** @test */

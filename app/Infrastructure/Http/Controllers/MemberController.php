@@ -57,7 +57,7 @@ class MemberController extends Controller
 
         $command = new DestroyMemberCommand(
             lobby_id: $user->lobby_id,
-            name: $user->member_id,
+            member_id: $user->member_id,
         );
 
         $handler->execute($command);
@@ -74,7 +74,7 @@ class MemberController extends Controller
             /** @var string[] $params */
             $params = $request->validated();
 
-            $handler->execute(new CreateMemberCommand(...$params));
+            $memberId = $handler->execute(new CreateMemberCommand(...$params));
         } catch (LobbyNotAllocatedException $e) {
             return back()->withErrors([
                 'lobby_id' => trans('validation.exists', ['attribute' => 'lobby code']),
@@ -83,7 +83,7 @@ class MemberController extends Controller
 
         $authFactory->createFromRaw([
             'lobby_id' => $params['lobby_id'],
-            'member_id' => $params['name'],
+            'member_id' => $memberId,
         ])
             ->login($request->session());
 

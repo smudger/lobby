@@ -6,5 +6,5 @@ use RuntimeException;
 
 class MemberNotFoundException extends RuntimeException
 {
-    protected $message = 'The member with the given name could not be found.';
+    protected $message = 'The member with the given id could not be found.';
 }

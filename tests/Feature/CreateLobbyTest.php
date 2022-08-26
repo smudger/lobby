@@ -28,7 +28,7 @@ class CreateLobbyTest extends TestCase
         /** @var \stdClass */
         $lobby = DB::table('lobbies')->orderByDesc('id')->first();
         Assert::assertEquals([
-            ['name' => 'Ayesha Nicole'],
+            ['id' => 1, 'name' => 'Ayesha Nicole'],
         ], json_decode($lobby->members, true));
 
         $response->assertRedirect(route('lobby.show', ['id' => $lobby->id]));

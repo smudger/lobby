@@ -1,6 +1,11 @@
 parameters:
 	ignoreErrors:
 		-
+			message: "#^Cannot access property \\$id on mixed\\.$#"
+			count: 1
+			path: app/Domain/Models/Lobby.php
+
+		-
 			message: "#^Call to an undefined static method App\\\\Infrastructure\\\\Auth\\\\User\\:\\:find\\(\\)\\.$#"
 			count: 1
 			path: app/Infrastructure/Auth/User.php
@@ -16,7 +21,7 @@ parameters:
 			path: app/Infrastructure/Events/SqlEventStore.php
 
 		-
-			message: "#^Parameter \\$body of class App\\\\Domain\\\\Events\\\\StoredEvent constructor expects array\\<string, string\\>, mixed given\\.$#"
+			message: "#^Parameter \\$body of class App\\\\Domain\\\\Events\\\\StoredEvent constructor expects array\\<string, int\\|string\\>, mixed given\\.$#"
 			count: 1
 			path: app/Infrastructure/Events/SqlEventStore.php
 
@@ -69,6 +74,16 @@ parameters:
 			message: "#^Cannot access property \\$id on mixed\\.$#"
 			count: 1
 			path: app/Infrastructure/Providers/RouteServiceProvider.php
+
+		-
+			message: "#^Parameter \\#1 \\$lobby_id of class Tests\\\\Fakes\\\\FakeUser constructor expects string, int\\|string given\\.$#"
+			count: 1
+			path: tests/Fakes/FakeUserFactory.php
+
+		-
+			message: "#^Parameter \\$member_id of class Tests\\\\Fakes\\\\FakeUser constructor expects int, string given\\.$#"
+			count: 1
+			path: tests/Fakes/FakeUserFactory.php
 
 		-
 			message: "#^Access to an undefined property App\\\\Infrastructure\\\\Auth\\\\User\\:\\:\\$id\\.$#"

@@ -5,6 +5,7 @@ namespace Tests\Unit\Events;
 use App\Domain\Events\EventStore;
 use App\Domain\Events\MemberLeftLobby;
 use App\Domain\Models\LobbyId;
+use App\Domain\Models\Member;
 use App\Infrastructure\Broadcasts\DomainBroadcast;
 use App\Infrastructure\Events\BroadcastEventStore;
 use App\Infrastructure\Events\InMemoryEventStore;
@@ -27,8 +28,8 @@ class BroadcastEventStoreTest extends TestCase
         Event::fake();
         Carbon::setTestNow(now());
 
-        $first = new MemberLeftLobby(LobbyId::fromString('AAAA'), 'Ayesha Nicole');
-        $second = new MemberLeftLobby(LobbyId::fromString('BBBB'), 'Kim Petras');
+        $first = new MemberLeftLobby(LobbyId::fromString('AAAA'), new Member(id: 1, name: 'Ayesha Nicole'));
+        $second = new MemberLeftLobby(LobbyId::fromString('BBBB'), new Member(id: 1, name: 'Kim Petras'));
 
         $this->getEventStore()->addAll([$first, $second]);
 

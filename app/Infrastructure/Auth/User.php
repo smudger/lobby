@@ -27,7 +27,7 @@ class User extends Model implements AuthenticatableContract, UserFactory, HasSes
     {
         return $this->createFromRaw([
             'lobby_id' => $lobby->id->__toString(),
-            'member_id' => $member->name,
+            'member_id' => $member->id,
         ]);
     }
 

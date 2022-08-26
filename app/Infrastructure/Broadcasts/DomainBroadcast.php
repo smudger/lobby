@@ -16,7 +16,7 @@ class DomainBroadcast implements ShouldBroadcast
     ) {
     }
 
-    /** @return array<string, string> */
+    /** @return array<string, string|int> */
     public function broadcastWith(): array
     {
         return array_merge(['occurred_at' => Carbon::now()->toIso8601ZuluString()], $this->event->body());

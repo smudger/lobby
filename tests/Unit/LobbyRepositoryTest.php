@@ -63,18 +63,14 @@ trait LobbyRepositoryTest
 
         $lobby = new Lobby($repository->allocate());
 
-        $member = new Member(
-            name: 'Ayesha Nicole',
-        );
-
-        $lobby->addMember($member);
+        $lobby->createMember('Ayesha Nicole');
 
         $repository->save($lobby);
 
         $updatedLobby = $repository->findById($lobby->id);
 
         Assert::assertCount(1, $updatedLobby->members());
-        Assert::assertTrue($updatedLobby->members()[0]->equals($member));
+        Assert::assertTrue($updatedLobby->members()[0]->equals(new Member(id: 1, name: 'Ayesha Nicole')));
     }
 
     /** @test */
@@ -84,11 +80,8 @@ trait LobbyRepositoryTest
 
         $lobby = new Lobby($repository->allocate());
 
-        $member = new Member(
-            name: 'Ayesha Nicole',
-        );
-        $lobby->addMember($member);
-        $lobby->removeMember($member);
+        $lobby->createMember('Ayesha Nicole');
+        $lobby->removeMember(1);
 
         $repository->save($lobby);
 

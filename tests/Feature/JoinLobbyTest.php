@@ -33,6 +33,7 @@ class JoinLobbyTest extends TestCase
         $member = $updatedLobby->members()[0];
 
         Assert::assertEquals('Ayesha Nicole', $member->name);
+        Assert::assertEquals(1, $member->id);
     }
 
     /** @test */

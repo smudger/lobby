@@ -3,12 +3,13 @@
 namespace App\Domain\Events;
 
 use App\Domain\Models\AggregateId;
+use App\Domain\Models\Member;
 
 class MemberJoinedLobby extends DomainEvent
 {
     public function __construct(
         AggregateId $aggregateId,
-        private readonly string $name,
+        private readonly Member $member,
     ) {
         parent::__construct($aggregateId);
     }
@@ -16,7 +17,8 @@ class MemberJoinedLobby extends DomainEvent
     public function body(): array
     {
         return [
-            'name' => $this->name,
+            'id' => $this->member->id,
+            'name' => $this->member->name,
         ];
     }
 }

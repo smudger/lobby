@@ -8,7 +8,6 @@ use App\Domain\Events\StoredEvent;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Lobby;
-use App\Domain\Models\Member;
 use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Arr;
@@ -47,6 +46,7 @@ class CreateMemberHandlerTest extends TestCase
         $member = $updatedLobby->members()[0];
 
         Assert::assertEquals('Ayesha Nicole', $member->name);
+        Assert::assertEquals(1, $member->id);
     }
 
     /** @test */
@@ -75,6 +75,7 @@ class CreateMemberHandlerTest extends TestCase
         Assert::assertEquals('member_joined_lobby', $event->type);
         Assert::assertEquals([
             'name' => 'Ayesha Nicole',
+            'id' => 1,
         ], $event->body);
     }
 
@@ -129,7 +130,7 @@ class CreateMemberHandlerTest extends TestCase
     {
         $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $lobby = new Lobby($repository->allocate());
-        $lobby->addMember(new Member(name: 'Ayesha Nicole'));
+        $lobby->createMember('Ayesha Nicole');
         $repository->save($lobby);
 
         $command = new CreateMemberCommand(

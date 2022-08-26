@@ -3,7 +3,6 @@
 namespace Tests\Feature;
 
 use App\Domain\Models\Lobby;
-use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Auth\User;
 use App\Infrastructure\Broadcasts\DomainBroadcast;
@@ -26,11 +25,10 @@ class LeaveLobbyTest extends TestCase
         $repository = $this->app->make(LobbyRepository::class);
 
         $lobby = new Lobby($repository->allocate());
-        $member = new Member('Ayesha Nicole');
-        $lobby->addMember($member);
+        $lobby->createMember('Ayesha Nicole');
         $repository->save($lobby);
 
-        $user = (new User())->createFromLobbyMember($lobby, $member);
+        $user = (new User())->createFromLobbyMember($lobby, $lobby->members()[0]);
 
         $response = $this->actingAs($user)
             ->delete('/members/me');

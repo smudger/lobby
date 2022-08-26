@@ -6,6 +6,8 @@ use App\Domain\Events\LobbyCreated;
 use App\Domain\Events\MemberJoinedLobby;
 use App\Domain\Events\MemberLeftLobby;
 use App\Domain\Exceptions\MemberNotFoundException;
+use App\Domain\Exceptions\ValidationException;
+use Illuminate\Support\Arr;
 
 class Lobby extends Aggregate
 {
@@ -15,15 +17,6 @@ class Lobby extends Aggregate
         private array $members = [],
     ) {
         parent::__construct();
-
-        /** @var Member[] $membersWithKeys */
-        $membersWithKeys = collect($members)
-            ->mapWithKeys(fn (Member $member) => [
-                $member->name => $member,
-            ])
-            ->toArray();
-
-        $this->members = $membersWithKeys;
     }
 
     public static function create(LobbyId $lobbyId): Lobby
@@ -38,25 +31,54 @@ class Lobby extends Aggregate
     /** @return Member[] */
     public function members(): array
     {
-        return array_values($this->members);
+        return $this->members;
     }
 
-    public function addMember(Member $member): void
+    public function removeMember(int $id): void
     {
-        $this->members[$member->name] = $member;
+        /** @var Member $memberToRemove */
+        $memberToRemove = Arr::first(
+            $this->members,
+            fn (Member $member) => $member->id === $id,
+            fn () => throw new MemberNotFoundException()
+        );
 
-        $this->recordEvent(new MemberJoinedLobby($this->id, $member->name));
+        $this->members = array_values(Arr::where(
+            $this->members,
+            fn (Member $member) => ! $member->equals($memberToRemove)
+        ));
+
+        $this->recordEvent(new MemberLeftLobby($this->id, $memberToRemove));
     }
 
-    public function removeMember(Member $member): void
+    /** @throws ValidationException */
+    public function createMember(string $name): int
     {
-        if (! isset($this->members[$member->name])) {
-            throw new MemberNotFoundException();
+        if (trim($name) === '') {
+            throw new ValidationException([
+                'name' => ['The name cannot be empty.'],
+            ]);
         }
 
-        unset($this->members[$member->name]);
+        if (collect($this->members)
+            ->filter(fn (Member $member) => $member->name === $name)
+            ->isNotEmpty()) {
+            throw new ValidationException([
+                'name' => ['This name has already been taken.'],
+            ]);
+        }
 
-        $this->recordEvent(new MemberLeftLobby($this->id, $member->name));
+        $id = count($this->members) === 0
+            ? 1
+            : Arr::last($this->members)->id + 1;
+
+        $member = new Member(id: $id, name: $name);
+
+        $this->members[] = $member;
+
+        $this->recordEvent(new MemberJoinedLobby($this->id, $member));
+
+        return $id;
     }
 
     public function equals(mixed $other): bool

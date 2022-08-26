@@ -7,9 +7,7 @@ use App\Application\DestroyMemberHandler;
 use App\Domain\Events\StoredEvent;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
 use App\Domain\Exceptions\MemberNotFoundException;
-use App\Domain\Exceptions\ValidationException;
 use App\Domain\Models\Lobby;
-use App\Domain\Models\Member;
 use App\Infrastructure\Events\InMemoryEventStore;
 use App\Infrastructure\Persistence\InMemoryLobbyRepository;
 use Illuminate\Support\Arr;
@@ -25,15 +23,13 @@ class DestroyMemberHandlerTest extends TestCase
         $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
         $lobby = new Lobby($repository->allocate());
 
-        $ayesha = new Member('Ayesha Nicole');
-        $kim = new Member('Kim Petras');
-        $lobby->addMember($ayesha);
-        $lobby->addMember($kim);
+        $lobby->createMember('Ayesha Nicole');
+        $lobby->createMember('Kim Petras');
         $repository->save($lobby);
 
         $command = new DestroyMemberCommand(
             lobby_id: $lobby->id->__toString(),
-            name: 'Ayesha Nicole',
+            member_id: 1,
         );
 
         $handler = new DestroyMemberHandler($repository);
@@ -56,13 +52,12 @@ class DestroyMemberHandlerTest extends TestCase
         $repository = new InMemoryLobbyRepository(eventStore: $eventStore);
         $lobby = new Lobby($repository->allocate());
 
-        $ayesha = new Member('Ayesha Nicole');
-        $lobby->addMember($ayesha);
+        $lobby->createMember('Ayesha Nicole');
         $repository->save($lobby);
 
         $command = new DestroyMemberCommand(
             lobby_id: $lobby->id->__toString(),
-            name: 'Ayesha Nicole',
+            member_id: 1,
         );
 
         $handler = new DestroyMemberHandler($repository);
@@ -77,6 +72,7 @@ class DestroyMemberHandlerTest extends TestCase
         Assert::assertEquals('member_left_lobby', $event->type);
         Assert::assertEquals([
             'name' => 'Ayesha Nicole',
+            'id' => 1,
         ], $event->body);
     }
 
@@ -87,7 +83,7 @@ class DestroyMemberHandlerTest extends TestCase
 
         $command = new DestroyMemberCommand(
             lobby_id: 'AAAA',
-            name: 'Ayesha Nicole',
+            member_id: 1,
         );
 
         $handler = new DestroyMemberHandler($repository);
@@ -102,31 +98,6 @@ class DestroyMemberHandlerTest extends TestCase
     }
 
     /** @test */
-    public function it_throws_an_exception_if_the_name_is_empty(): void
-    {
-        $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
-        $lobby = new Lobby($repository->allocate());
-
-        $command = new DestroyMemberCommand(
-            lobby_id: $lobby->id->__toString(),
-            name: '',
-        );
-
-        $handler = new DestroyMemberHandler($repository);
-
-        try {
-            $handler->execute($command);
-
-            Assert::fail('No exception thrown despite empty name.');
-        } catch (ValidationException $e) {
-            Assert::assertEquals('The given data was invalid.', $e->getMessage());
-            Assert::assertEquals([
-                'name' => ['The name cannot be empty.'],
-            ], $e->errors);
-        }
-    }
-
-    /** @test */
     public function it_throws_an_exception_if_the_member_could_not_be_found(): void
     {
         $repository = new InMemoryLobbyRepository(new InMemoryEventStore());
@@ -134,7 +105,7 @@ class DestroyMemberHandlerTest extends TestCase
 
         $command = new DestroyMemberCommand(
             lobby_id: $lobby->id->__toString(),
-            name: 'Ayesha Nicole',
+            member_id: 1,
         );
 
         $handler = new DestroyMemberHandler($repository);
@@ -144,7 +115,7 @@ class DestroyMemberHandlerTest extends TestCase
 
             Assert::fail('No exception thrown despite unknown member.');
         } catch (MemberNotFoundException $e) {
-            Assert::assertEquals('The member with the given name could not be found.', $e->getMessage());
+            Assert::assertEquals('The member with the given id could not be found.', $e->getMessage());
         }
     }
 }

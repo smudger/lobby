@@ -6,7 +6,7 @@ use App\Domain\Models\AggregateId;
 
 abstract class DomainEvent
 {
-    /** @return array<string, string> */
+    /** @return array<string, int|string> */
     abstract public function body(): array;
 
     public function __construct(

@@ -5,6 +5,7 @@ namespace App\Domain\Models;
 class Member
 {
     public function __construct(
+        public readonly int $id,
         public readonly string $name,
     ) {
     }
@@ -15,6 +16,7 @@ class Member
             return false;
         }
 
-        return $this->name === $other->name;
+        return $this->name === $other->name
+            && $this->id === $other->id;
     }
 }
