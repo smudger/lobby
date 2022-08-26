@@ -1,21 +1,38 @@
 <script setup>
 import moment from "moment";
-import { onMounted, ref } from "vue";
+import { onMounted, onUnmounted, ref } from "vue";
+
+let interval = null;
 
 const props = defineProps({
     lobby: Object,
     me: Object,
 });
 
-const members = ref(props.lobby.members);
+const addAgo = (members) => {
+    return members.map((member) => ({
+        ...member,
+        ago: moment(member.joined_at).fromNow(),
+    }));
+};
+
+const members = ref(addAgo(props.lobby.members));
+
+onUnmounted(() => {
+    clearInterval(interval);
+});
 
 onMounted(() => {
+    interval = setInterval(() => {
+        members.value = addAgo(members.value);
+    }, 10000);
+
     Echo.private(`lobby.${props.lobby.id}`)
         .listen(".member_left_lobby", ({ id }) => {
             members.value = members.value.filter((member) => member.id !== id);
         })
         .listen(".member_joined_lobby", (member) => {
-            members.value = members.value.concat([member]);
+            members.value = members.value.concat(addAgo([member]));
         });
 });
 </script>
@@ -43,7 +60,7 @@ onMounted(() => {
                         </p>
                         <p class="text-sm text-gray-500 truncate">
                             Joined
-                            {{ moment(member.joined_at).fromNow() }}.
+                            {{ member.ago }}.
                         </p>
                     </div>
                     <div>
