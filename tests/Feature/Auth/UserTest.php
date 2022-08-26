@@ -6,7 +6,6 @@ use App\Domain\Models\Lobby;
 use App\Domain\Models\Member;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Auth\User;
-use App\Infrastructure\Auth\UserFactory;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Session\ArraySessionHandler;
 use Illuminate\Session\Store;
@@ -18,11 +17,6 @@ use Tests\TestCase;
 class UserTest extends TestCase
 {
     use RefreshDatabase;
-
-    protected function getFactory(): UserFactory
-    {
-        return new User();
-    }
 
     protected function getLobbyRepository(): LobbyRepository
     {
@@ -85,8 +79,7 @@ class UserTest extends TestCase
         $lobby = new Lobby($lobbyId);
         $member = new Member(id: 1, name: 'Ayesha Nicole', joinedAt: Carbon::now());
 
-        /** @var User $user */
-        $user = $this->getFactory()->createFromLobbyMember($lobby, $member);
+        $user = (new User())->createFromLobbyMember($lobby, $member);
 
         Assert::assertEquals($lobbyId->__toString(), $user->lobby_id);
         Assert::assertEquals(1, $user->member_id);
@@ -97,13 +90,30 @@ class UserTest extends TestCase
     {
         $lobbyId = $this->getLobbyRepository()->allocate();
 
-        /** @var User $user */
-        $user = $this->getFactory()->createFromRaw([
+        $user = (new User())->createFromRaw([
             'lobby_id' => $lobbyId->__toString(),
             'member_id' => 1,
         ]);
 
         Assert::assertEquals($lobbyId->__toString(), $user->lobby_id);
         Assert::assertEquals(1, $user->member_id);
+    }
+
+    /** @test */
+    public function it_can_delete_a_user_by_its_lobby_id_and_member_id(): void
+    {
+        $lobbyId = $this->getLobbyRepository()->allocate();
+
+        (new User())->createFromRaw([
+            'lobby_id' => $lobbyId->__toString(),
+            'member_id' => 1,
+        ]);
+
+        (new User())->deleteByLobbyIdAndMemberId($lobbyId->__toString(), 1);
+
+        $this->assertDatabaseMissing('users', [
+            'lobby_id' => $lobbyId->__toString(),
+            'member_id' => 1,
+        ]);
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Providers;
 
+use App\Application\Auth\UserRepository;
 use App\Domain\Events\EventStore;
 use App\Domain\Repositories\LobbyRepository;
 use App\Infrastructure\Auth\User;
@@ -17,6 +18,7 @@ class AppServiceProvider extends ServiceProvider
     public array $bindings = [
         LobbyRepository::class => SqlLobbyRepository::class,
         UserFactory::class => User::class,
+        UserRepository::class => User::class,
     ];
 
     /**

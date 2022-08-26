@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Http\Controllers;
 
+use App\Application\Auth\UserRepository;
 use App\Application\CreateMemberCommand;
 use App\Application\CreateMemberHandler;
 use App\Application\DestroyMemberCommand;
@@ -60,6 +61,7 @@ class MemberController extends Controller
         string $id,
         int $memberId,
         DestroyMemberHandler $handler,
+        UserRepository $repository,
     ): RedirectResponse {
         $command = new DestroyMemberCommand(
             lobby_id: $id,
@@ -67,6 +69,8 @@ class MemberController extends Controller
         );
 
         $handler->execute($command);
+
+        $repository->deleteByLobbyIdAndMemberId($id, $memberId);
 
         return redirect()->route('members.index', ['id' => $id]);
     }

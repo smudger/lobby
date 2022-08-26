@@ -28,12 +28,14 @@ class KickMemberTest extends TestCase
         $memberToKeep = $lobby->members()[0];
         $user = (new User())->createFromLobbyMember($lobby, $memberToKeep);
 
-        $idToKick = $lobby->createMember('Kim Petras');
+        $lobby->createMember('Kim Petras');
+        $memberToKick = $lobby->members()[1];
+        (new User())->createFromLobbyMember($lobby, $memberToKick);
 
         $repository->save($lobby);
 
         $response = $this->actingAs($user)
-            ->delete('/lobbies/'.$lobby->id->__toString().'/members/'.$idToKick);
+            ->delete('/lobbies/'.$lobby->id->__toString().'/members/'.$memberToKick->id);
 
         $response->assertRedirect(route('members.index', ['id' => $lobby->id]));
         $updatedLobby = $repository->findById($lobby->id);
@@ -42,5 +44,9 @@ class KickMemberTest extends TestCase
         Event::assertDispatched(DomainBroadcast::class, function (DomainBroadcast $broadcast) {
             return $broadcast->broadcastAs() === 'member_left_lobby';
         });
+        $this->assertDatabaseMissing('users', [
+            'lobby_id' => $lobby->id->__toString(),
+            'member_id' => $memberToKick->id,
+        ]);
     }
 }

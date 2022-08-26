@@ -2,6 +2,7 @@
 
 namespace App\Infrastructure\Auth;
 
+use App\Application\Auth\UserRepository;
 use App\Domain\Models\Lobby;
 use App\Domain\Models\Member;
 use Illuminate\Auth\Authenticatable;
@@ -10,7 +11,7 @@ use Illuminate\Contracts\Session\Session;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Auth;
 
-class User extends Model implements AuthenticatableContract, UserFactory, HasSession
+class User extends Model implements AuthenticatableContract, UserFactory, HasSession, UserRepository
 {
     use Authenticatable;
 
@@ -58,5 +59,15 @@ class User extends Model implements AuthenticatableContract, UserFactory, HasSes
         $session->regenerateToken();
 
         self::find($userId)->delete();
+    }
+
+    public function deleteByLobbyIdAndMemberId(string $lobbyId, int $memberId): void
+    {
+        self::query()
+            ->where([
+                'lobby_id' => $lobbyId,
+                'member_id' => $memberId,
+            ])
+            ->delete();
     }
 }
