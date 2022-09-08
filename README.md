@@ -1,6 +1,3 @@
-<!-- Improved compatibility of back to top link: See: https://github.com/othneildrew/Best-README-Template/pull/73 -->
-<a name="readme-top"></a>
-
 [![Contributors][contributors-shield]][contributors-url]
 [![Forks][forks-shield]][forks-url]
 [![Stargazers][stars-shield]][stars-url]
@@ -9,12 +6,7 @@
 
 # Lobby
 
-<!-- Description -->
-## Description
-
 A game lobby site using Inertia, Vue, and Laravel. Written in PHP and JavaScript.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
@@ -22,8 +14,6 @@ A game lobby site using Inertia, Vue, and Laravel. Written in PHP and JavaScript
 ## License
 
 Distributed under the MIT License. See `LICENSE.md` for more information.
-
-<p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 
 
