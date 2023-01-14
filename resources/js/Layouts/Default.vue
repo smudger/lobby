@@ -44,6 +44,12 @@ const sidebarNavigation = computed(() => [
         icon: RssIcon,
         isCurrent: usePage().component.value === "Feed/Index",
     },
+    {
+        name: "Iframe",
+        href: `/lobbies/${lobbyId.value}/iframe`,
+        icon: RssIcon,
+        isCurrent: usePage().component.value === "Iframe/Index",
+    },
 ]);
 
 const mobileMenuOpen = ref(false);

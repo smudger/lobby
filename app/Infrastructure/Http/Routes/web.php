@@ -2,6 +2,7 @@
 
 use App\Infrastructure\Http\Controllers\FeedController;
 use App\Infrastructure\Http\Controllers\GameController;
+use App\Infrastructure\Http\Controllers\IframeController;
 use App\Infrastructure\Http\Controllers\LobbyController;
 use App\Infrastructure\Http\Controllers\MemberController;
 use Illuminate\Support\Facades\Route;
@@ -22,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/lobbies/{id}/members/{memberId}', [MemberController::class, 'destroy'])->name('members.destroy');
     Route::get('/lobbies/{id}/games', [GameController::class, 'index'])->name('games.index');
     Route::get('/lobbies/{id}/feed', [FeedController::class, 'index'])->name('feed.index');
+    Route::get('/lobbies/{id}/iframe', [IframeController::class, 'index'])->name('iframe.index');
 
     Route::delete('/members/me', [MemberController::class, 'destroyMe'])->name('members.destroyMe');
 });
