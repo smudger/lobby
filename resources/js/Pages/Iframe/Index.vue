@@ -25,7 +25,7 @@ onBeforeUnmount(() => {
             <div class="text-center flex flex-col items-center">
                 <h1>Iframe</h1>
                 <iframe
-                    src="/walk-the-dog/index.html"
+                    src="/games/walk-the-dog/index.html"
                     title="Walk The Dog"
                     class="border-none overflow-hidden"
                     scrolling="no"
