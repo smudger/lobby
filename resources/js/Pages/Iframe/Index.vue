@@ -1,7 +1,19 @@
 <script setup>
+import { onMounted, onBeforeUnmount } from "vue";
 defineProps({
     lobby: Object,
     game_url: String,
+});
+
+const receiveMessage = (event) => {
+    console.log(event.data);
+};
+
+onMounted(() => {
+    window.addEventListener("message", receiveMessage);
+});
+onBeforeUnmount(() => {
+    window.removeEventListener("message", receiveMessage);
 });
 </script>
 
@@ -13,7 +25,7 @@ defineProps({
             <div class="text-center flex flex-col items-center">
                 <h1>Iframe</h1>
                 <iframe
-                    :src="game_url"
+                    src="/walk-the-dog/index.html"
                     title="Walk The Dog"
                     class="border-none overflow-hidden"
                     scrolling="no"
