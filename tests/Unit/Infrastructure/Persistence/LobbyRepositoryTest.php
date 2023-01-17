@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Infrastructure\Persistence;
 
 use App\Domain\Events\EventStore;
 use App\Domain\Exceptions\LobbyNotAllocatedException;
