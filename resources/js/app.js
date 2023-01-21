@@ -1,8 +1,7 @@
 import "../css/app.css";
 
 import { createApp, h } from "vue";
-import { createInertiaApp, Head, Link } from "@inertiajs/inertia-vue3";
-import { InertiaProgress } from "@inertiajs/progress";
+import { createInertiaApp, Head, Link } from "@inertiajs/vue3";
 import { resolvePageComponent } from "laravel-vite-plugin/inertia-helpers";
 import Echo from "laravel-echo";
 import Pusher from "pusher-js";
@@ -37,13 +36,15 @@ createInertiaApp({
         });
         return page;
     },
-    setup({ el, app, props, plugin }) {
-        return createApp({ render: () => h(app, props) })
+    setup({ el, App, props, plugin }) {
+        return createApp({ render: () => h(App, props) })
             .use(plugin)
             .component("Link", Link)
             .component("Head", Head)
             .mount(el);
     },
+    progress: {
+        showSpinner: true,
+        color: "#4B5563",
+    },
 });
-
-InertiaProgress.init({ showSpinner: true, color: "#4B5563" });
