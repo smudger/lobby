@@ -5,7 +5,7 @@ export default {
 </script>
 
 <script setup>
-import { useForm } from "@inertiajs/inertia-vue3";
+import { useForm } from "@inertiajs/vue3";
 import { ExclamationCircleIcon } from "@heroicons/vue/solid";
 
 const form = useForm({

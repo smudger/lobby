@@ -1,6 +1,6 @@
 <script setup>
 import { ref, computed } from "vue";
-import { usePage } from "@inertiajs/inertia-vue3";
+import { usePage } from "@inertiajs/vue3";
 import {
     Dialog,
     DialogPanel,
@@ -17,32 +17,32 @@ import {
 } from "@heroicons/vue/outline";
 import { LogoutIcon } from "@heroicons/vue/solid";
 
-const lobbyId = computed(() => usePage().props.value.lobby?.id);
+const lobbyId = computed(() => usePage().props.lobby?.id);
 
 const sidebarNavigation = computed(() => [
     {
         name: "Home",
         href: `/lobbies/${lobbyId.value}`,
         icon: HomeIcon,
-        isCurrent: usePage().component.value === "Lobby/Show",
+        isCurrent: usePage().component === "Lobby/Show",
     },
     {
         name: "Games",
         href: `/lobbies/${lobbyId.value}/games`,
         icon: ViewGridIcon,
-        isCurrent: usePage().component.value.startsWith("Game"),
+        isCurrent: usePage().component.startsWith("Game"),
     },
     {
         name: "Members",
         href: `/lobbies/${lobbyId.value}/members`,
         icon: UserGroupIcon,
-        isCurrent: usePage().component.value === "Member/Index",
+        isCurrent: usePage().component === "Member/Index",
     },
     {
         name: "Feed",
         href: `/lobbies/${lobbyId.value}/feed`,
         icon: RssIcon,
-        isCurrent: usePage().component.value === "Feed/Index",
+        isCurrent: usePage().component === "Feed/Index",
     },
 ]);
 
