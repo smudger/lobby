@@ -30,6 +30,7 @@
         "@inertiajs/inertia": "^0.11.0",
         "@inertiajs/inertia-vue3": "^0.6.0",
         "@inertiajs/progress": "^0.2.7",
+        "@smudger/walk-the-dog": "^0.0.5-alpha",
         "@tailwindcss/forms": "^0.5.2",
         "moment": "^2.29.4"
     }
