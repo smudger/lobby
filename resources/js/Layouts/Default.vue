@@ -30,7 +30,7 @@ const sidebarNavigation = computed(() => [
         name: "Games",
         href: `/lobbies/${lobbyId.value}/games`,
         icon: ViewGridIcon,
-        isCurrent: usePage().component.value === "Game/Index",
+        isCurrent: usePage().component.value.startsWith("Game"),
     },
     {
         name: "Members",

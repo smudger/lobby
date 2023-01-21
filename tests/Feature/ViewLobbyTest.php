@@ -47,7 +47,7 @@ class ViewLobbyTest extends TestCase
                     ])
                     ->toArray()
                 )
-           )
+            )
         );
     }
 

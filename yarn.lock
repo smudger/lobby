@@ -91,6 +91,11 @@
     "@nodelib/fs.scandir" "2.1.5"
     fastq "^1.6.0"
 
+"@smudger/walk-the-dog@^0.0.5-alpha":
+  version "0.0.5-alpha"
+  resolved "https://registry.yarnpkg.com/@smudger/walk-the-dog/-/walk-the-dog-0.0.5-alpha.tgz#f03d7020174219dfad547ede2ef0bcfe4dadea4e"
+  integrity sha512-f7aGz1oOL7acO2YTFq+GIwO/CUbFIVOv4M1lGcEsYFjLthvoUn7NnNEcGSMuAGoZqUOwDYdU/6TmZrilcOMgow==
+
 "@tailwindcss/forms@^0.5.2":
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/@tailwindcss/forms/-/forms-0.5.2.tgz#4ef45f9916dcb37838cbe7fecdcc4ba7a7c2ab59"
