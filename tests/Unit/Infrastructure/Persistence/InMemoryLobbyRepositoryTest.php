@@ -14,7 +14,7 @@ use PHPUnit\Framework\TestCase;
 
 class InMemoryLobbyRepositoryTest extends TestCase
 {
-    use LobbyRepositoryTest;
+    use LobbyRepositoryTestTrait;
 
     private EventStore $eventStore;
 

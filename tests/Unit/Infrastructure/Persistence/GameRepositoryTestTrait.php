@@ -7,7 +7,7 @@ use App\Domain\Models\Game;
 use App\Domain\Repositories\GameRepository;
 use PHPUnit\Framework\Assert;
 
-trait GameRepositoryTest
+trait GameRepositoryTestTrait
 {
     abstract protected function getRepository(): GameRepository;
 

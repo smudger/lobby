@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class InMemoryGameRepositoryTest extends TestCase
 {
-    use GameRepositoryTest;
+    use GameRepositoryTestTrait;
 
     protected function getRepository(): GameRepository
     {

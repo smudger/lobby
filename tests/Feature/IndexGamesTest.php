@@ -53,12 +53,12 @@ class IndexGamesTest extends TestCase
                 )
             )
             ->where('games', collect($gameRepository->all())
-                     ->map(fn (Game $game) => [
-                         'description' => $game->description,
-                         'name' => $game->name,
-                         'slug' => $game->slug,
-                     ])
-                     ->all()
+                ->map(fn (Game $game) => [
+                    'description' => $game->description,
+                    'name' => $game->name,
+                    'slug' => $game->slug,
+                ])
+                ->all()
             )
         );
     }

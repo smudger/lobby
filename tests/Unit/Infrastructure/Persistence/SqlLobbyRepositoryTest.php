@@ -14,7 +14,7 @@ use Tests\TestCase;
 
 class SqlLobbyRepositoryTest extends TestCase
 {
-    use LobbyRepositoryTest, RefreshDatabase;
+    use LobbyRepositoryTestTrait, RefreshDatabase;
 
     private EventStore $eventStore;
 
