@@ -15,7 +15,7 @@ use Tests\TestCase;
 
 class BroadcastEventStoreTest extends TestCase
 {
-    use EventStoreTest;
+    use EventStoreTestTrait;
 
     public function getEventStore(): EventStore
     {

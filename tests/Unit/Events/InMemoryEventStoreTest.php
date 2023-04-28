@@ -8,7 +8,7 @@ use PHPUnit\Framework\TestCase;
 
 class InMemoryEventStoreTest extends TestCase
 {
-    use EventStoreTest;
+    use EventStoreTestTrait;
 
     public function getEventStore(): EventStore
     {

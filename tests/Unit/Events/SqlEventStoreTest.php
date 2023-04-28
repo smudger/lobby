@@ -9,7 +9,7 @@ use Tests\TestCase;
 
 class SqlEventStoreTest extends TestCase
 {
-    use RefreshDatabase, EventStoreTest;
+    use RefreshDatabase, EventStoreTestTrait;
 
     public function getEventStore(): EventStore
     {

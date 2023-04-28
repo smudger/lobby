@@ -11,7 +11,7 @@ use App\Domain\Repositories\LobbyRepository;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Assert;
 
-trait LobbyRepositoryTest
+trait LobbyRepositoryTestTrait
 {
     abstract protected function getRepository(): LobbyRepository;
 

@@ -10,7 +10,7 @@ use App\Domain\Models\Member;
 use Illuminate\Support\Carbon;
 use PHPUnit\Framework\Assert;
 
-trait EventStoreTest
+trait EventStoreTestTrait
 {
     abstract public function getEventStore(): EventStore;
 
